@@ -53,11 +53,6 @@ begin
   SP      <= sp_t;
   spt_sel <= (we and en) or (not empty and en);
 
---  -- empty multiplexor
---  with empty select
---    addsub_0or1 <= std_logic_vector(to_unsigned(1, SP_WDTH)) when '1',
---    std_logic_vector(to_unsigned(0, SP_WDTH))                when others;
-
   -- reset/new value multiplexor
   with sclr select
     sp_in <= std_logic_vector(to_unsigned(2**SP_WDTH - 1, SP_WDTH)) when '1',
@@ -67,11 +62,6 @@ begin
   with spt_sel select
     spt_newval <= addsub_res when '1',
     sp_t                     when others;
-
---  -- address multiplexor
---  with we select
---    addr_muxout <= spt_newval when '1',
---    sp_t                      when others;
 
   -- empty comparator
   empty <= '1' when sp_t = std_logic_vector(to_unsigned(2**SP_WDTH - 1, SP_WDTH)) else '0';

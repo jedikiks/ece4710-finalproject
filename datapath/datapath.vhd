@@ -19,6 +19,7 @@ entity Datapath is
         MB            : in  std_logic;
         RW            : in  std_logic;
         MA            : in  std_logic;
+        MA_sclr       : in  std_logic;
         SIE           : in  std_logic;
         LIE           : in  std_logic;
         INTP          : in  std_logic;
@@ -87,7 +88,6 @@ begin
 
   ieflag : FlipFlop port map (d => SIE, clrn => '1', prn => '1', clk => clock, ena => LIE, sclr => '0', q => IE);
 
-
   DO       <= reg_out;
   OUT_PORT <= reg_out;
   PORT_ID  <= mux_out;
@@ -128,7 +128,7 @@ begin
     r_15_out           when others;
 
   r_16 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => MA, sclr => '0', D => reg_out, Q => r_16_out);
+    port map (clock => clock, resetn => resetn, E => MA, sclr => MA_sclr, D => reg_out, Q => r_16_out);
   r_15 : my_rege generic map (N => 8)
     port map (clock => clock, resetn => resetn, E => E(15), sclr => '0', D => xz, Q => r_15_out);
   r_14 : my_rege generic map (N => 8)

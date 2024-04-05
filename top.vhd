@@ -6,8 +6,8 @@ use ieee.math_real.ceil;
 entity top is
   generic (
     -- Instruction Memory
+    IM_DIN_BITS   : integer;
     IM_ADDR_BITS  : integer;
-    IM_DATA_BITS  : integer;
     -- Data Memory
     DI_WDTH       : integer;
     DO_WDTH       : integer;
@@ -26,13 +26,20 @@ entity top is
     OUT_PORT_BITS : integer;
     IN_PORT_BITS  : integer);
 
-  port (clock, resetn, INT,
-        E_PC, sclr_PC, IM_WE      : in  std_logic;
-        IM_DI                     : in  std_logic_vector (IM_DATA_BITS - 1 downto 0);
-        IN_PORT                   : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
-        READ_STROBE, WRITE_STROBE : out std_logic;
-        PORT_ID                   : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-        OUT_PORT                  : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
+  port (
+    -- Input signals
+    clock, resetn, INT        : in  std_logic;
+    -- PC signals
+    E_PC, sclr_PC             : in  std_logic;
+    -- IM signals
+    im_enb, im_web            : in  std_logic;
+    im_dinb                   : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
+    im_addrb                  : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+    -- Output signals
+    IN_PORT                   : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
+    READ_STROBE, WRITE_STROBE : out std_logic;
+    PORT_ID                   : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
+    OUT_PORT                  : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
 end top;
 
 architecture structural of top is
@@ -55,6 +62,7 @@ architecture structural of top is
       MB            : in  std_logic;
       RW            : in  std_logic;
       MA            : in  std_logic;
+      MA_sclr       : in  std_logic;
       SIE           : in  std_logic;
       LIE           : in  std_logic;
       INTP          : in  std_logic;
@@ -76,19 +84,23 @@ architecture structural of top is
       DO            : out std_logic_vector (7 downto 0));
 
   end component Datapath;
-  component in_RAMgen is
-    generic (
-      nrows       : integer;
-      ncols       : integer;
-      FILE_IMG    : string;
-      INIT_VALUES : string);
+
+  component instr_mem is
     port (
-      clock              : in  std_logic;
-      inRAM_idata        : in  std_logic_vector (31 downto 0);
-      inRAM_add          : in  std_logic_vector (integer(ceil(log2(real(nrows*ncols))))-1 downto 0);
-      inRAM_we, inRAM_en : in  std_logic;
-      inRAM_odata        : out std_logic_vector (31 downto 0));
-  end component in_RAMgen;
+      clka  : in  std_logic;
+      ena   : in  std_logic;
+      wea   : in  std_logic_vector(0 downto 0);
+      addra : in  std_logic_vector(9 downto 0);
+      dina  : in  std_logic_vector(17 downto 0);
+      douta : out std_logic_vector(17 downto 0);
+      clkb  : in  std_logic;
+      enb   : in  std_logic;
+      web   : in  std_logic_vector(0 downto 0);
+      addrb : in  std_logic_vector(9 downto 0);
+      dinb  : in  std_logic_vector(17 downto 0);
+      doutb : out std_logic_vector(17 downto 0)
+      );
+  end component instr_mem;
 
   component stack is
     generic (
@@ -112,7 +124,8 @@ architecture structural of top is
       MD_BITS : integer := 2);
     port (
       IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-      clock, resetn, INT, Z, C, IE                    : in  std_logic;
+      clock, resetn, INT, Z, C,
+      IE, E_PC                                        : in  std_logic;
       INT_ACK                                         : out std_logic;
       -- Program Counter Signals
       JS                                              : out std_logic_vector (1 downto 0);
@@ -155,14 +168,14 @@ architecture structural of top is
       do                    : out std_logic_vector (DO_WDTH - 1 downto 0));
   end component ram_emul;
 
-  -- PC
+-- PC
   signal IR  : std_logic_vector (IR_BITS - 1 downto 0);
   signal SS  : std_logic;
   signal JS  : std_logic_vector (1 downto 0);
   signal EPC : std_logic;
   signal PC  : std_logic_vector (9 downto 0);
 
-  -- Instruction Decoder
+-- Instruction Decoder
   signal INT_ACK                                         : std_logic;
   signal DR                                              : std_logic_vector (DR_BITS - 1 downto 0);
   signal SR                                              : std_logic_vector (SR_BITS - 1 downto 0);
@@ -172,31 +185,21 @@ architecture structural of top is
   signal DM_WE                                           : std_logic;
   signal we, en, sclr                                    : std_logic;
 
-  -- Stack
+-- Stack
   signal DO : std_logic_vector (DAT_WDTH - 1 downto 0);
   signal SP : std_logic_vector (SP_WDTH - 1 downto 0);
 
-  -- Data Memory
+-- Data Memory
   signal DM_AO : std_logic_vector (ADDR_WDTH - 1 downto 0);
   signal DM_DI : std_logic_vector (DI_WDTH - 1 downto 0);
   signal DM_DO : std_logic_vector (DO_WDTH - 1 downto 0);
 
-  -- Instruction Memory
-  signal IM_AO            : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
-  signal IM_DI_t            : std_logic_vector (IM_DATA_BITS - 1 downto 0);
-  signal IM_DO            : std_logic_vector (IM_DATA_BITS - 1 downto 0);
-  --signal IM_WE            : std_logic;
-  -- We need signals that hold the entire 32 bit word coming from IM
-  signal IM_DO_t : std_logic_vector (31 downto 0);
-  --signal IM_AO_t : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+-- Instruction Memory
 
-  -- Datapath
+-- Datapath
   signal Z, C, V, N, IE : std_logic;
 
 begin
-
-  --Concatinate 32 bit word, we only need 18 data x 11 addr bits
-  --IM_DI    <= IM_DI_t(17 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
@@ -219,6 +222,7 @@ begin
       MB           => MB,
       RW           => RW,
       MA           => MA,
+      MA_sclr      => MA_sclr,
       SIE          => SIE,
       LIE          => LIE,
       INTP         => INTP,
@@ -256,27 +260,20 @@ begin
       do      => DM_DO);
 
   -- Instruction memory
-  in_RAMgen_1 : in_RAMgen
-    generic map (
-      nrows       => 1024,
-      ncols       => 1,
-      FILE_IMG    => "",
-      INIT_VALUES => "NO")
+  instr_mem_1 : instr_mem
     port map (
-      clock       => clock,
-      inRAM_idata => "000000000" & IM_DI,
-      inRAM_add   => PC,
-      inRAM_we    => IM_WE,
-      inRAM_en    => '1',
-      inRAM_odata(17 downto 0) => IR);
-      --inRAM_odata => IM_DO_t);
-  --port map (
-  --  clock       => clock,
-  --  inRAM_idata => IM_DI_t,
-  --  inRAM_add   => PC,
-  --  inRAM_we    => IM_WE,
-  --  inRAM_en    => '1',
-  --  inRAM_odata => IM_DO_t);
+      clka   => clock,
+      ena    => '1',
+      wea(0) => '0',
+      addra  => PC,
+      dina   => (others => '0'),
+      douta  => IR,
+      clkb   => clock,
+      enb    => im_enb,
+      web(0) => im_web,
+      addrb  => im_addrb,
+      dinb   => im_dinb);
+  --doutb => im_doutb);
 
   -- Stack
   stack_1 : stack
@@ -325,6 +322,7 @@ begin
       INT_ACK => INT_ACK,
       JS      => JS,
       EPC     => EPC,
+      E_PC    => E_PC,
       SS      => SS,
       DR      => DR,
       SR      => SR,

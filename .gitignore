@@ -1,0 +1,13 @@
+generic/gendec/gen_dec.zip
+generic/gendec/xsim.dir/
+generic/gendec/xvhdl.log
+generic/gendec/xvhdl.pb
+generic/my_addsub/my_addsub.xdc
+generic/my_addsub/tb_my_addsub.vhd
+generic/ram_emul/ram_emul_tb.vhd
+instruction_decoder.vhd
+project_1/project_1.cache/
+project_1/project_1.hw/
+project_1/project_1.runs/
+project_1/project_1.sim/
+project_1/project_1.srcs/
