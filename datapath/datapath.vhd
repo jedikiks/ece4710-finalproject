@@ -88,7 +88,7 @@ begin
 
   ieflag : FlipFlop port map (d => SIE, clrn => '1', prn => '1', clk => clock, ena => LIE, sclr => '0', q => IE);
 
-  DO       <= reg_out;
+  DO       <= r_16_out;
   OUT_PORT <= reg_out;
   PORT_ID  <= mux_out;
   AO       <= mux_out(5 downto 0);

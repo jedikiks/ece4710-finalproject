@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="85000000fs"></ZoomStartTime>
-      <ZoomEndTime time="305400001fs"></ZoomEndTime>
-      <Cursor1Time time="147500000fs"></Cursor1Time>
+      <ZoomStartTime time="20000000fs"></ZoomStartTime>
+      <ZoomEndTime time="253420535fs"></ZoomEndTime>
+      <Cursor1Time time="136920000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="229"></NameColumnWidth>
-      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+      <NameColumnWidth column_width="212"></NameColumnWidth>
+      <ValueColumnWidth column_width="91"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="7" />
+   <WVObjectSize size="8" />
    <wvobject type="logic" fp_name="/tb_top/clock">
       <obj_property name="ElementShortName">clock</obj_property>
       <obj_property name="ObjectShortName">clock</obj_property>
@@ -47,6 +47,7 @@
          <obj_property name="ObjectShortName">IR[17:0]</obj_property>
          <obj_property name="CustomSignalColor">#FF00FF</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/tb_top/top_1/instruction_decoder_1/opcode">
          <obj_property name="ElementShortName">opcode[17:12]</obj_property>
@@ -327,8 +328,9 @@
       </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group64">
-      <obj_property name="label">Data memory</obj_property>
+      <obj_property name="label">Instruction mem</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb_top/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
@@ -338,7 +340,6 @@
       <wvobject type="group" fp_name="group359">
          <obj_property name="label">port A</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject type="logic" fp_name="/tb_top/top_1/instr_mem_1/ena">
             <obj_property name="ElementShortName">ena</obj_property>
             <obj_property name="ObjectShortName">ena</obj_property>
@@ -405,10 +406,44 @@
          </wvobject>
       </wvobject>
    </wvobject>
+   <wvobject type="group" fp_name="group1214">
+      <obj_property name="label">Data Memory</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/tb_top/top_1/ram_emul_1/we">
+         <obj_property name="ElementShortName">we</obj_property>
+         <obj_property name="ObjectShortName">we</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb_top/top_1/ram_emul_1/en">
+         <obj_property name="ElementShortName">en</obj_property>
+         <obj_property name="ObjectShortName">en</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_top/top_1/ram_emul_1/di">
+         <obj_property name="ElementShortName">di[7:0]</obj_property>
+         <obj_property name="ObjectShortName">di[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_top/top_1/ram_emul_1/address">
+         <obj_property name="ElementShortName">address[5:0]</obj_property>
+         <obj_property name="ObjectShortName">address[5:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_top/top_1/ram_emul_1/do">
+         <obj_property name="ElementShortName">do[7:0]</obj_property>
+         <obj_property name="ObjectShortName">do[7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
    <wvobject type="group" fp_name="group38">
       <obj_property name="label">Datapath</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb_top/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
@@ -633,6 +668,7 @@
    <wvobject type="group" fp_name="group52">
       <obj_property name="label">Stack</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb_top/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
@@ -657,6 +693,13 @@
          <obj_property name="CustomSignalColor">#FFA500</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
+      <wvobject type="array" fp_name="/tb_top/top_1/stack_1/SP">
+         <obj_property name="ElementShortName">SP[4:0]</obj_property>
+         <obj_property name="ObjectShortName">SP[4:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFA500</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
       <wvobject type="array" fp_name="/tb_top/top_1/stack_1/DI">
          <obj_property name="ElementShortName">DI[9:0]</obj_property>
          <obj_property name="ObjectShortName">DI[9:0]</obj_property>
@@ -668,13 +711,6 @@
          <obj_property name="ObjectShortName">DO[9:0]</obj_property>
          <obj_property name="CustomSignalColor">#FFA500</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/tb_top/top_1/stack_1/SP">
-         <obj_property name="ElementShortName">SP[4:0]</obj_property>
-         <obj_property name="ObjectShortName">SP[4:0]</obj_property>
-         <obj_property name="CustomSignalColor">#FFA500</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>

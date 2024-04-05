@@ -254,7 +254,7 @@ begin
       clock   => clock,
       resetn  => resetn,
       we      => DM_WE,
-      en      => en,
+      en      => '1',
       di      => DM_DI,
       address => DM_AO,
       do      => DM_DO);
