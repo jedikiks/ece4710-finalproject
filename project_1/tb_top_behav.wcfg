@@ -11,12 +11,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="20000000fs"></ZoomStartTime>
-      <ZoomEndTime time="253420535fs"></ZoomEndTime>
-      <Cursor1Time time="136920000fs"></Cursor1Time>
+      <ZoomStartTime time="66232000fs"></ZoomStartTime>
+      <ZoomEndTime time="289032001fs"></ZoomEndTime>
+      <Cursor1Time time="166932000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="212"></NameColumnWidth>
+      <NameColumnWidth column_width="206"></NameColumnWidth>
       <ValueColumnWidth column_width="91"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="8" />
@@ -47,25 +47,16 @@
          <obj_property name="ObjectShortName">IR[17:0]</obj_property>
          <obj_property name="CustomSignalColor">#FF00FF</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/tb_top/top_1/instruction_decoder_1/opcode">
-         <obj_property name="ElementShortName">opcode[17:12]</obj_property>
-         <obj_property name="ObjectShortName">opcode[17:12]</obj_property>
-         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
-      </wvobject>
-      <wvobject type="other" fp_name="/tb_top/top_1/instruction_decoder_1/y">
-         <obj_property name="ElementShortName">y</obj_property>
-         <obj_property name="ObjectShortName">y</obj_property>
-         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
-         <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
       <wvobject type="logic" fp_name="/tb_top/top_1/instruction_decoder_1/INT_ACK">
          <obj_property name="ElementShortName">INT_ACK</obj_property>
          <obj_property name="ObjectShortName">INT_ACK</obj_property>
          <obj_property name="CustomSignalColor">#FF00FF</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject type="other" fp_name="/tb_top/top_1/instruction_decoder_1/id_fsm_1/y">
+         <obj_property name="ElementShortName">y</obj_property>
+         <obj_property name="ObjectShortName">y</obj_property>
       </wvobject>
       <wvobject type="group" fp_name="group1963">
          <obj_property name="label">extras</obj_property>
@@ -374,6 +365,7 @@
       <wvobject type="group" fp_name="group365">
          <obj_property name="label">port B</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="logic" fp_name="/tb_top/top_1/instr_mem_1/enb">
             <obj_property name="ElementShortName">enb</obj_property>
             <obj_property name="ObjectShortName">enb</obj_property>
@@ -409,7 +401,6 @@
    <wvobject type="group" fp_name="group1214">
       <obj_property name="label">Data Memory</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb_top/top_1/ram_emul_1/we">
          <obj_property name="ElementShortName">we</obj_property>
          <obj_property name="ObjectShortName">we</obj_property>
@@ -444,6 +435,7 @@
    <wvobject type="group" fp_name="group38">
       <obj_property name="label">Datapath</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb_top/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
@@ -453,6 +445,7 @@
       <wvobject type="group" fp_name="group318">
          <obj_property name="label">register file</obj_property>
          <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_15_out">
             <obj_property name="ElementShortName">r_15_out[7:0]</obj_property>
             <obj_property name="ObjectShortName">r_15_out[7:0]</obj_property>
