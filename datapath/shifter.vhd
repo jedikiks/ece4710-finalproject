@@ -4,7 +4,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity shifter is
     generic (
         N           : integer := 8;                   -- Number of bits
-        SHIFT_VALUE : std_logic_vector := "01"                -- Value to be shifted in (default is '1')
+        SHIFT_VALUE : std_logic_vector := "001"                -- Value to be shifted in (default is '1')
     );
     port (
         idata       : in  std_logic_vector(N-1 downto 0);  -- Input data
@@ -18,7 +18,7 @@ architecture Behavioral of shifter is
 
 
 begin
-    process(idata, dir)
+    process(idata, dir, cin)
     begin
         case dir is
             when '0' =>

@@ -34,8 +34,8 @@ architecture structure of my_alu is
   end component;
   component shifter is
     generic (
-      N           : integer          := 8;    -- Number of bits
-      SHIFT_VALUE : std_logic_vector := "01"  -- Value to be shifted in (default is '1')
+      N           : integer          := 8;     -- Number of bits
+      SHIFT_VALUE : std_logic_vector := "001"  -- Value to be shifted in (default is '1')
       );
     port (
       idata : in  std_logic_vector(N-1 downto 0);  -- Input data
@@ -57,14 +57,12 @@ architecture structure of my_alu is
   signal y_cout, y_overflow, coutx, overflowx, z0, z1, z2, z3, z4, z5, z6, z7, z8, z9, z10, z11,
     z12, z13, z14, z15, z16, z17, y_zero, y_negative : std_logic;
 
-  signal slA0_in, slA0_out, slA1_in, slA1_out, slAA0_in, slAA0_out, slAc_in, slAc_out,
-    sRA0_in, SRA0_out, sRA1_out, sRA1_in, sRAA7_out, sRAA7_in, sRAc_out, sRAc_in, rLA_out,
-    rLA_in, rRA_out, rRA_in : std_logic_vector(7 downto 0);
+  signal slA0_out, slA1_out, slAA0_out, slAc_out, SRA0_out, sRA1_out,
+    sRAA7_out, sRAc_out, rLA_out, rRA_out : std_logic_vector(7 downto 0);
 
   signal empty : std_logic := '0';
 
 begin
-
 
   z0 <= not (ApB(0) or ApB(1) or ApB(2) or ApB(3) or
              ApB(4) or ApB(5) or ApB(6) or ApB(7));
@@ -102,7 +100,6 @@ begin
               rLA_out(4) or rLA_out(5) or rLA_out(6) or rLA_out(7));
   z17 <= not (rRA_out(0) or rRA_out(1) or rRA_out(2) or rRA_out(3) or
               rRA_out(4) or rRA_out(5) or rRA_out(6) or rRA_out(7));
-
 
   n0  <= ApB(7) and '1';
   n1  <= ApBpC(7) and '1';
@@ -146,50 +143,50 @@ begin
 
 -- left-shift A, din = 0
   f8 : shifter generic map(N => 8, SHIFT_VALUE => "000")
-    port map(idata => slA0_in, dir => '0', cin => '0', odata => slA0_out);
+    port map(idata => A, dir => '0', cin => '0', odata => slA0_out);
 
   f9 : shifter generic map(N => 8, SHIFT_VALUE => "001")
-    port map(idata => slA1_in, dir => '0', cin => '0', odata => slA1_out);
+    port map(idata => A, dir => '0', cin => '0', odata => slA1_out);
 
   f10 : shifter generic map(N => 8, SHIFT_VALUE => "010")
-    port map(idata => slAA0_in, dir => '0', cin => '0', odata => slAA0_out);
+    port map(idata => A, dir => '0', cin => '0', odata => slAA0_out);
 
   f11 : shifter generic map(N => 8, SHIFT_VALUE => "011")
-    port map(idata => slAc_in, dir => '0', cin => y_cout, odata => slAc_out);
+    port map(idata => A, dir => '0', cin => y_cout, odata => slAc_out);
 
   f12 : shifter generic map(N => 8, SHIFT_VALUE => "000")
-    port map(idata => sRA0_in, dir => '1', cin => '0', odata => sRA0_out);
+    port map(idata => A, dir => '1', cin => '0', odata => sRA0_out);
 
   f13 : shifter generic map(N => 8, SHIFT_VALUE => "001")
-    port map(idata => sRA1_in, dir => '1', cin => '0', odata => sRA1_out);
+    port map(idata => A, dir => '1', cin => '0', odata => sRA1_out);
 
   f14 : shifter generic map(N => 8, SHIFT_VALUE => "010")
-    port map(idata => sRAA7_in, dir => '1', cin => '0', odata => sRAA7_out);
+    port map(idata => A, dir => '1', cin => '0', odata => sRAA7_out);
 
   f15 : shifter generic map(N => 8, SHIFT_VALUE => "011")
-    port map(idata => sRAc_in, dir => '1', cin => y_cout, odata => sRAc_out);
+    port map(idata => A, dir => '1', cin => y_cout, odata => sRAc_out);
 
   f16 : shifter generic map(N => 8, SHIFT_VALUE => "100")
-    port map(idata => rLA_in, dir => '0', cin => '0', odata => rLA_out);
+    port map(idata => A, dir => '0', cin => '0', odata => rLA_out);
 
   f17 : shifter generic map(N => 8, SHIFT_VALUE => "100")
-    port map(idata => rRA_in, dir => '1', cin => '0', odata => rRA_out);
+    port map(idata => A, dir => '1', cin => '0', odata => rRA_out);
 
   c4 <= '0';
   c5 <= AandBtst(7) xor AandBtst(6) xor AandBtst(5) xor AandBtst(4) xor AandBtst(3) xor
         AandBtst(2) xor AandBtst(1) xor AandBtst(0);
   c6  <= '0';
   c7  <= '0';
-  c8  <= slA0_in(7);
-  c9  <= slA1_in(7);
-  c10 <= slAA0_in(7);
-  c11 <= slAc_in(7);
-  c12 <= sRA0_in(7);
-  c13 <= sRA1_in(7);
-  c14 <= sRAA7_in(7);
-  c15 <= sRAc_in(7);
-  c16 <= rLA_in(7);
-  c17 <= rRA_in(7);
+  c8  <= A(7);
+  c9  <= A(7);
+  c10 <= A(7);
+  c11 <= A(7);
+  c12 <= A(0);
+  c13 <= A(0);
+  c14 <= A(0);
+  c15 <= A(7);
+  c16 <= A(7);
+  c17 <= A(0);
 
   fcout : FlipFlop port map (d => y_cout, clrn => '1', prn => '1', clk => clock, ena => '1', sclr => '0', q => cflag);
 
