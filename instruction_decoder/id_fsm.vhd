@@ -13,7 +13,7 @@ entity id_fsm is
     MD_BITS : integer := 2);
   port (
     IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-    clock, resetn, Z, V, N C
+    clock, resetn, Z, V, N, C,
     IE, E_PC, INT_P                                 : in  std_logic;
     INT_ACK                                         : out std_logic;
     -- Program Counter Signals
@@ -465,7 +465,7 @@ begin
 
           when "110001" =>              -- CALL extensions: with flags
             case ir(25 downto 23) is
-              when "000" =>              -- CALL Z, aaa
+              when "000" =>             -- CALL Z, aaa
                 if Z = '1' then
                   -- Stack
                   en  <= '1';
@@ -479,7 +479,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "001" =>              -- CALL NZ, aaa
+              when "001" =>             -- CALL NZ, aaa
                 if Z = '0' then
                   -- Stack
                   en  <= '1';
@@ -493,7 +493,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "010" =>              -- CALL V, aaa
+              when "010" =>             -- CALL V, aaa
                 if V = '1' then
                   -- Stack
                   en  <= '1';
@@ -507,7 +507,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "011" =>              -- CALL NV, aaa
+              when "011" =>             -- CALL NV, aaa
                 if V = '0' then
                   -- Stack
                   en  <= '1';
@@ -521,7 +521,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "100" =>              -- CALL N, aaa
+              when "100" =>             -- CALL N, aaa
                 if N = '1' then
                   -- Stack
                   en  <= '1';
@@ -535,7 +535,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "101" =>              -- CALL NN, aaa
+              when "101" =>             -- CALL NN, aaa
                 if N = '0' then
                   -- Stack
                   en  <= '1';
@@ -549,7 +549,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "110" =>              -- CALL C, aaa
+              when "110" =>             -- CALL C, aaa
                 if C = '1' then
                   -- Stack
                   en  <= '1';
@@ -563,7 +563,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "111" =>              -- CALL NC, aaa
+              when "111" =>             -- CALL NC, aaa
                 if C = '0' then
                   -- Stack
                   en  <= '1';
@@ -587,7 +587,7 @@ begin
 
           when "110101" =>              -- JUMP extensions: with flags
             case ir(25 downto 23) is
-              when "000" =>              -- JUMP Z, aaa
+              when "000" =>             -- JUMP Z, aaa
                 if Z = '1' then
                   -- PC
                   JS  <= "00";
@@ -598,7 +598,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "001" =>              -- JUMP NZ, aaa
+              when "001" =>             -- JUMP NZ, aaa
                 if Z = '0' then
                   -- PC
                   JS  <= "00";
@@ -609,7 +609,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "010" =>              -- JUMP V, aaa
+              when "010" =>             -- JUMP V, aaa
                 if V = '1' then
                   -- PC
                   JS  <= "00";
@@ -620,7 +620,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "011" =>              -- JUMP NV, aaa
+              when "011" =>             -- JUMP NV, aaa
                 if V = '0' then
                   -- PC
                   JS  <= "00";
@@ -631,7 +631,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "100" =>              -- JUMP N, aaa
+              when "100" =>             -- JUMP N, aaa
                 if N = '1' then
                   -- PC
                   JS  <= "00";
@@ -642,7 +642,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "101" =>              -- JUMP NN, aaa
+              when "101" =>             -- JUMP NN, aaa
                 if N = '0' then
                   -- PC
                   JS  <= "00";
@@ -653,7 +653,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "110" =>              -- JUMP C, aaa
+              when "110" =>             -- JUMP C, aaa
                 if C = '1' then
                   -- PC
                   JS  <= "00";
@@ -664,7 +664,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "111" =>              -- JUMP NC, aaa
+              when "111" =>             -- JUMP NC, aaa
                 if C = '0' then
                   -- PC
                   JS  <= "00";
@@ -691,7 +691,7 @@ begin
 
           when "101011" =>              -- RETURN extensions: with flags
             case ir(25 downto 0) is
-              when "00000000000000000000000000" =>              -- RETURN Z, aaa
+              when "00000000000000000000000000" =>  -- RETURN Z, aaa
                 if Z = '1' then
                   -- PC
                   SS  <= '1';
@@ -705,7 +705,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000001" =>              -- RETURN NZ, aaa
+              when "00000000000000000000000001" =>  -- RETURN NZ, aaa
                 if Z = '0' then
                   -- PC
                   SS  <= '1';
@@ -719,7 +719,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000010" =>              -- RETURN V, aaa
+              when "00000000000000000000000010" =>  -- RETURN V, aaa
                 if V = '1' then
                   -- PC
                   SS  <= '1';
@@ -733,7 +733,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000011" =>              -- RETURN NV, aaa
+              when "00000000000000000000000011" =>  -- RETURN NV, aaa
                 if V = '0' then
                   -- PC
                   SS  <= '1';
@@ -747,7 +747,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000100" =>              -- RETURN N, aaa
+              when "00000000000000000000000100" =>  -- RETURN N, aaa
                 if N = '1' then
                   -- PC
                   SS  <= '1';
@@ -761,7 +761,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000101" =>              -- RETURN NN, aaa
+              when "00000000000000000000000101" =>  -- RETURN NN, aaa
                 if N = '0' then
                   -- PC
                   SS  <= '1';
@@ -775,7 +775,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000110" =>              -- RETURN C, aaa
+              when "00000000000000000000000110" =>  -- RETURN C, aaa
                 if C = '1' then
                   -- PC
                   SS  <= '1';
@@ -789,7 +789,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "00000000000000000000000111" =>              -- RETURN NC, aaa
+              when "00000000000000000000000111" =>  -- RETURN NC, aaa
                 if C = '0' then
                   -- PC
                   SS  <= '1';
@@ -806,8 +806,8 @@ begin
             end case;
 
           when "111100" =>              -- ENABLE/DISABLE interrupt ext
-            case ir(11 downto 0) is
-              when "00000000000000000000000000" =>    -- DISABLE INTERRUPT
+            case ir(25 downto 0) is
+              when "00000000000000000000000000" =>  -- DISABLE INTERRUPT
                 -- Datapath
                 SIE <= '0';
                 LIE <= '1';
@@ -815,7 +815,7 @@ begin
                 JS  <= "11";
                 EPC <= '1';
 
-              when "00000000000000000000000001" =>    -- ENABLE INTERRUPT
+              when "00000000000000000000000001" =>  -- ENABLE INTERRUPT
                 -- Datapath
                 SIE <= '1';
                 LIE <= '1';
@@ -826,8 +826,8 @@ begin
             end case;
 
           when "111000" =>              -- RETURNI ENABLE/DISABLE interrupt ext
-            case ir(11 downto 0) is
-              when "00000000000000000000000000" =>    -- RETURNI DISABLE
+            case ir(25 downto 0) is
+              when "00000000000000000000000000" =>  -- RETURNI DISABLE
                 -- Datapath
                 SIE <= '0';
                 LIE <= '1';
@@ -838,7 +838,7 @@ begin
                 -- Stack
                 en  <= '1';
 
-              when "00000000000000000000000001" =>    -- RETURNI ENABLE
+              when "00000000000000000000000001" =>  -- RETURNI ENABLE
                 -- Datapath
                 SIE <= '1';
                 LIE <= '1';

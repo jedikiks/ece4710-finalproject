@@ -12,7 +12,7 @@ entity instruction_decoder is
     MD_BITS : integer := 2);
   port (
     IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-    clock, resetn, INT, Z, V, N, C
+    clock, resetn, INT, Z, V, N, C,
     IE, E_PC                                        : in  std_logic;
     INT_ACK                                         : out std_logic;
     -- Program Counter Signals

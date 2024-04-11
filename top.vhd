@@ -123,7 +123,7 @@ architecture structural of top is
       MD_BITS : integer := 2);
     port (
       IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-      clock, resetn, INT, Z, V, N, C
+      clock, resetn, INT, Z, V, N, C,
       IE, E_PC                                        : in  std_logic;
       INT_ACK                                         : out std_logic;
       -- Program Counter Signals
@@ -168,40 +168,41 @@ architecture structural of top is
   end component ram_emul;
 
 -- PC
-  signal IR  : std_logic_vector (IR_BITS - 1 downto 0);
-  signal IR_t  : std_logic_vector (31 downto 0);
-  signal SS  : std_logic;
-  signal JS  : std_logic_vector (1 downto 0);
-  signal EPC : std_logic;
-  signal PC  : std_logic_vector (9 downto 0);
+  signal IR   : std_logic_vector (IR_BITS - 1 downto 0);
+  signal IR_t : std_logic_vector (31 downto 0);
+  signal SS   : std_logic;
+  signal JS   : std_logic_vector (1 downto 0);
+  signal EPC  : std_logic;
+  signal PC   : std_logic_vector (9 downto 0);
 
 -- Instruction Decoder
-  signal INT_ACK                                         : std_logic;
-  signal DR                                              : std_logic_vector (DR_BITS - 1 downto 0);
-  signal SR                                              : std_logic_vector (SR_BITS - 1 downto 0);
-  signal MD                                              : std_logic_vector (MD_BITS - 1 downto 0);
-  signal fs                                              : std_logic_vector (FS_BITS - 1 downto 0);
-  signal RW, MA, MA_sclr, SIE, LIE, INTP, RI, RS, WS, MB : std_logic;
-  signal DM_WE                                           : std_logic;
-  signal we, en, sclr                                    : std_logic;
+  signal INT_ACK : std_logic;
+  signal DR      : std_logic_vector (DR_BITS - 1 downto 0);
+  signal SR      : std_logic_vector (SR_BITS - 1 downto 0);
+  signal MD      : std_logic_vector (MD_BITS - 1 downto 0);
+  signal fs      : std_logic_vector (FS_BITS - 1 downto 0);
+  signal RW, MA, MA_sclr, SIE, LIE,
+    INTP, RI, RS, WS, MB : std_logic;
+  signal DM_WE        : std_logic;
+  signal we, en, sclr : std_logic;
 
 -- Stack
   signal DO : std_logic_vector (DAT_WDTH - 1 downto 0);
   signal SP : std_logic_vector (SP_WDTH - 1 downto 0);
 
 -- Data Memory
-  signal DM_AO   : std_logic_vector (ADDR_WDTH - 1 downto 0);
-  signal DM_DI   : std_logic_vector (DI_WDTH - 1 downto 0);
-  signal DM_DO   : std_logic_vector (DO_WDTH - 1 downto 0);
+  signal DM_AO : std_logic_vector (ADDR_WDTH - 1 downto 0);
+  signal DM_DI : std_logic_vector (DI_WDTH - 1 downto 0);
+  signal DM_DO : std_logic_vector (DO_WDTH - 1 downto 0);
 
 -- Instruction Memory
 
 -- Datapath
-  signal Z, V, N, C IE : std_logic;
-  signal CI : std_logic_vector (31 downto 0);
+  signal Z, V, N, C, IE : std_logic;
+  signal CI            : std_logic_vector (31 downto 0);
 
 begin
-  CI <= x"000000" & IR(7 downto 0);
+  CI <= "00000000000" & IR(20 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
