@@ -5,25 +5,25 @@ use ieee.numeric_std.all;
 entity tb_top is
   generic (
     -- Instruction Memory
-    IM_DIN_BITS   : integer := 18;
-    IM_ADDR_BITS  : integer := 10;
+    IM_DIN_BITS   : integer := 32;
+    IM_ADDR_BITS  : integer := 16;
     -- Data Memory
-    DI_WDTH       : integer := 8;
-    DO_WDTH       : integer := 8;
+    DI_WDTH       : integer := 32;
+    DO_WDTH       : integer := 32;
     ADDR_WDTH     : integer := 6;
     -- Stack
     SP_WDTH       : integer := 5;
-    DAT_WDTH      : integer := 10;
+    DAT_WDTH      : integer := 16;
     -- Control
-    IR_BITS       : integer := 18;
+    IR_BITS       : integer := 32;
     -- Datapath
     FS_BITS       : integer := 5;
-    DR_BITS       : integer := 4;
-    SR_BITS       : integer := 4;
+    DR_BITS       : integer := 5;
+    SR_BITS       : integer := 5;
     MD_BITS       : integer := 2;
-    PORT_ID_BITS  : integer := 8;
-    OUT_PORT_BITS : integer := 8;
-    IN_PORT_BITS  : integer := 8);
+    PORT_ID_BITS  : integer := 32;
+    OUT_PORT_BITS : integer := 32;
+    IN_PORT_BITS  : integer := 32);
 end tb_top;
 
 architecture behavior of tb_top is
@@ -139,14 +139,17 @@ begin
     im_web <= '1';
     im_enb <= '1';
 
-    -- At address 0:
-    im_dinb <= "000000" & "0000" & "00000001";  -- LOAD s0, #1
+    --At address 0:
+    im_dinb <= "000000" & "00000" & "000000000000000000010";  -- LOAD s0, #2
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "100000" & "0000" & "00000001";  -- RR s0
+    im_dinb <= "000000" & "00001" & "000000000000000000010";  -- LOAD s0, #2
     wait for clock_period;
 
+    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+    im_dinb <= "011001" & "00000" & "00001" & x"0000";  -- ADD s0, s1
+    wait for clock_period;
 
     --======================
     -- Finish loading

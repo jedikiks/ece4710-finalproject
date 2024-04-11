@@ -55,8 +55,8 @@ architecture structural of top is
     port (
       clock, resetn : in  std_logic;
       DR            : in  std_logic_vector (DR_BITS - 1 downto 0);
-      CI            : in  std_logic_vector (7 downto 0);
-      DI            : in  std_logic_vector (7 downto 0);
+      CI            : in  std_logic_vector (31 downto 0);
+      DI            : in  std_logic_vector (31 downto 0);
       MD            : in  std_logic_vector (MD_BITS - 1 downto 0);
       fs            : in  std_logic_vector (FS_BITS - 1 downto 0);
       MB            : in  std_logic;
@@ -81,8 +81,7 @@ architecture structural of top is
       WRITE_STROBE  : out std_logic;
       OUT_PORT      : out std_logic_vector (OUT_PORT_BITS - 1 downto 0);
       AO            : out std_logic_vector (5 downto 0);
-      DO            : out std_logic_vector (7 downto 0));
-
+      DO            : out std_logic_vector (31 downto 0));
   end component Datapath;
 
   component instr_mem is
@@ -91,14 +90,14 @@ architecture structural of top is
       ena   : in  std_logic;
       wea   : in  std_logic_vector(0 downto 0);
       addra : in  std_logic_vector(9 downto 0);
-      dina  : in  std_logic_vector(17 downto 0);
-      douta : out std_logic_vector(17 downto 0);
+      dina  : in  std_logic_vector(31 downto 0);
+      douta : out std_logic_vector(31 downto 0);
       clkb  : in  std_logic;
       enb   : in  std_logic;
       web   : in  std_logic_vector(0 downto 0);
       addrb : in  std_logic_vector(9 downto 0);
-      dinb  : in  std_logic_vector(17 downto 0);
-      doutb : out std_logic_vector(17 downto 0)
+      dinb  : in  std_logic_vector(31 downto 0);
+      doutb : out std_logic_vector(31 downto 0)
       );
   end component instr_mem;
 
@@ -124,7 +123,7 @@ architecture structural of top is
       MD_BITS : integer := 2);
     port (
       IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-      clock, resetn, INT, Z, C,
+      clock, resetn, INT, Z, V, N, C,
       IE, E_PC                                        : in  std_logic;
       INT_ACK                                         : out std_logic;
       -- Program Counter Signals
@@ -143,16 +142,18 @@ architecture structural of top is
   end component instruction_decoder;
 
   component program_counter is
+    generic (
+      ADDR_WDTH : integer);
     port (
       clock, resetn : in  std_logic;
-      ST            : in  std_logic_vector (9 downto 0);
+      ST            : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
       SS            : in  std_logic;
-      JA_CA         : in  std_logic_vector (9 downto 0);
+      JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
       JS            : in  std_logic_vector (1 downto 0);
       EPC           : in  std_logic;
       E_PC          : in  std_logic;
       sclr_PC       : in  std_logic;
-      PC            : out std_logic_vector (9 downto 0));
+      PC            : out std_logic_vector (IM_ADDR_BITS - 1 downto 0));
   end component program_counter;
 
   component ram_emul is
@@ -169,21 +170,24 @@ architecture structural of top is
   end component ram_emul;
 
 -- PC
-  signal IR  : std_logic_vector (IR_BITS - 1 downto 0);
-  signal SS  : std_logic;
-  signal JS  : std_logic_vector (1 downto 0);
-  signal EPC : std_logic;
-  signal PC  : std_logic_vector (9 downto 0);
+  signal IR   : std_logic_vector (IR_BITS - 1 downto 0);
+  signal IR_t : std_logic_vector (31 downto 0);
+  signal SS   : std_logic;
+  signal JS   : std_logic_vector (1 downto 0);
+  signal EPC  : std_logic;
+  signal PC   : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+  --signal PC_t   : std_logic_vector (9 downto 0);
 
 -- Instruction Decoder
-  signal INT_ACK                                         : std_logic;
-  signal DR                                              : std_logic_vector (DR_BITS - 1 downto 0);
-  signal SR                                              : std_logic_vector (SR_BITS - 1 downto 0);
-  signal MD                                              : std_logic_vector (MD_BITS - 1 downto 0);
-  signal fs                                              : std_logic_vector (FS_BITS - 1 downto 0);
-  signal RW, MA, MA_sclr, SIE, LIE, INTP, RI, RS, WS, MB : std_logic;
-  signal DM_WE                                           : std_logic;
-  signal we, en, sclr                                    : std_logic;
+  signal INT_ACK : std_logic;
+  signal DR      : std_logic_vector (DR_BITS - 1 downto 0);
+  signal SR      : std_logic_vector (SR_BITS - 1 downto 0);
+  signal MD      : std_logic_vector (MD_BITS - 1 downto 0);
+  signal fs      : std_logic_vector (FS_BITS - 1 downto 0);
+  signal RW, MA, MA_sclr, SIE, LIE,
+    INTP, RI, RS, WS, MB : std_logic;
+  signal DM_WE        : std_logic;
+  signal we, en, sclr : std_logic;
 
 -- Stack
   signal DO : std_logic_vector (DAT_WDTH - 1 downto 0);
@@ -197,9 +201,12 @@ architecture structural of top is
 -- Instruction Memory
 
 -- Datapath
-  signal Z, C, V, N, IE : std_logic;
+  signal Z, V, N, C, IE : std_logic;
+  signal CI             : std_logic_vector (31 downto 0);
 
 begin
+  CI <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
+  --PC_t <= "000000" & PC;
 
   -- Datapath
   Datapath_1 : Datapath
@@ -215,7 +222,7 @@ begin
       clock        => clock,
       resetn       => resetn,
       DR           => DR,
-      CI           => IR(7 downto 0),
+      CI           => CI,
       DI           => DM_DO,
       MD           => MD,
       fs           => fs,
@@ -265,13 +272,13 @@ begin
       clka   => clock,
       ena    => '1',
       wea(0) => '0',
-      addra  => PC,
+      addra  => PC(9 downto 0),
       dina   => (others => '0'),
       douta  => IR,
       clkb   => clock,
       enb    => im_enb,
       web(0) => im_web,
-      addrb  => im_addrb,
+      addrb  => im_addrb(9 downto 0),
       dinb   => im_dinb);
   --doutb => im_doutb);
 
@@ -291,12 +298,14 @@ begin
 
   -- Program Counter
   program_counter_1 : program_counter
+    generic map (
+      ADDR_WDTH => IM_ADDR_BITS)
     port map (
       clock   => clock,
       resetn  => resetn,
       ST      => DO,
       SS      => SS,
-      JA_CA   => IR(9 downto 0),
+      JA_CA   => IR(15 downto 0),
       JS      => JS,
       EPC     => EPC,
       E_PC    => E_PC,
@@ -317,6 +326,8 @@ begin
       resetn  => resetn,
       INT     => INT,
       Z       => Z,
+      V       => V,
+      N       => N,
       C       => C,
       IE      => IE,
       INT_ACK => INT_ACK,
