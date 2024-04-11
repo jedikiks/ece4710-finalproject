@@ -92,7 +92,7 @@ architecture struct of Datapath is
   --signal alu_out_t : std_logic_vector (7 downto 0);
   signal regfile_output_bus, regfile_input_bus,
     alu_out, mux_out, ma_reg_Q : std_logic_vector(31 downto 0);
-  signal E : std_logic_vector (15 downto 0);
+  signal E : std_logic_vector (31 downto 0);
 
 
 begin

@@ -35,7 +35,7 @@ architecture behavioral of id_fsm is
   type state is (S1, S2, S3, S4);
   signal y : state;
 
-  signal opcode : std_logic_vector (6 downto 0);
+  signal opcode : std_logic_vector (5 downto 0);
 
 begin
   opcode <= ir (31 downto 26);

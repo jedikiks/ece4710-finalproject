@@ -140,19 +140,15 @@ begin
     im_enb <= '1';
 
     --At address 0:
-    im_dinb <= "00000000000000" & "000000" & "0000" & "00000010";  -- LOAD s0, #2
+    im_dinb <= "000000" & "00000" & "000000000000000000010";  -- LOAD s0, #2
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "00000000000000" & "101110" & "0000" & x"FF";  -- STORE s0, $FF
+    im_dinb <= "000000" & "00001" & "000000000000000000010";  -- LOAD s0, #2
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "00000000000000" & "000000" & "0001" & "00000001";  -- LOAD s0, #2
-    wait for clock_period;
-
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "00000000000000" & "000110" & "1000" & x"FF";  -- FETCH s8, $FF
+    im_dinb <= "011001" & "00000" & "00001" & x"0000";  -- ADD s0, s1
     wait for clock_period;
 
     --======================
