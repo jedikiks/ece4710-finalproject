@@ -5,11 +5,11 @@ use ieee.math_real.ceil;
 
 entity id_fsm is
   generic (
-    IR_BITS : integer := 18;
+    IR_BITS : integer := 32;
     -- Datapath
     FS_BITS : integer := 5;
-    DR_BITS : integer := 4;
-    SR_BITS : integer := 4;
+    DR_BITS : integer := 5;
+    SR_BITS : integer := 5;
     MD_BITS : integer := 2);
   port (
     IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
@@ -35,10 +35,10 @@ architecture behavioral of id_fsm is
   type state is (S1, S2, S3, S4);
   signal y : state;
 
-  signal opcode : std_logic_vector (17 downto 12);
+  signal opcode : std_logic_vector (6 downto 0);
 
 begin
-  opcode <= ir (17 downto 12);
+  opcode <= ir (31 downto 26);
 
   transitions : process (resetn, clock)
   begin
@@ -108,8 +108,8 @@ begin
           --===============================================
           when "000001" =>              -- LOAD sX, sY
             -- Datapath
-            SR  <= IR(7 downto 4);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(20 downto 16);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -117,8 +117,8 @@ begin
 
           when "011001" =>              -- ADD sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -126,8 +126,8 @@ begin
 
           when "011011" =>              -- ADDCY sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -135,8 +135,8 @@ begin
 
           when "011101" =>              -- SUB sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -144,8 +144,8 @@ begin
 
           when "011111" =>              -- SUBCY sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -153,7 +153,7 @@ begin
 
           when "010101" =>              -- COMPARE sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -161,8 +161,8 @@ begin
 
           when "001011" =>              -- AND sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -170,8 +170,8 @@ begin
 
           when "001101" =>              -- OR sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -179,8 +179,8 @@ begin
 
           when "001111" =>              -- XOR sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -188,7 +188,7 @@ begin
 
           when "010011" =>              -- TEST sX, sY
             -- Datapath
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -196,8 +196,8 @@ begin
 
           when "000111" =>              -- FETCH sX, (sY)
             -- Datapath
-            SR  <= IR(7 downto 4);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(20 downto 16);
+            DR  <= IR(25 downto 21);
             RW  <= '1';
             MD  <= "10";
             -- PC
@@ -206,7 +206,7 @@ begin
 
           when "101111" =>              -- STORE sX, (sY)
             -- Datapath
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -214,14 +214,14 @@ begin
 
           when "000101" =>              -- INPUT sX, (sY)
             -- Datapath
-            DR  <= IR(11 downto 8);
+            DR  <= IR(25 downto 21);
             MD  <= "01";
             -- PC
             JS  <= "11";
             EPC <= '1';
 
           when "101101" =>              -- OUTPUT sX, (sY) FIXME: register bug
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -232,7 +232,7 @@ begin
           --===============================================
           when "000000" =>              -- LOAD sX, kk
             -- Datapath
-            DR      <= IR(11 downto 8);
+            DR      <= IR(25 downto 21);
             MA_sclr <= '1';
             MA      <= '1';
             MB      <= '1';
@@ -241,8 +241,8 @@ begin
             EPC     <= '1';
 
           when "011000" =>              -- ADD sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -250,8 +250,8 @@ begin
             EPC <= '1';
 
           when "011010" =>              -- ADDCY sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -259,8 +259,8 @@ begin
             EPC <= '1';
 
           when "011100" =>              -- SUB sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -268,8 +268,8 @@ begin
             EPC <= '1';
 
           when "011110" =>              -- SUBCY sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -278,15 +278,15 @@ begin
 
           when "010100" =>              -- COMPARE sX, kk
             -- Datapath
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
             EPC <= '1';
 
           when "001010" =>              -- AND sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -294,8 +294,8 @@ begin
             EPC <= '1';
 
           when "001100" =>              -- OR sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -303,8 +303,8 @@ begin
             EPC <= '1';
 
           when "001110" =>              -- XOR sX, kk
-            SR  <= IR(11 downto 8);
-            DR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
+            DR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -312,7 +312,7 @@ begin
             EPC <= '1';
 
           when "010010" =>              -- TEST sX, kk
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             MB  <= '1';
             -- PC
@@ -322,7 +322,7 @@ begin
           when "000110" =>              -- FETCH sX, ss
             -- Datapath
             MB  <= '1';
-            DR  <= IR(11 downto 8);
+            DR  <= IR(25 downto 21);
             MD  <= "10";
             RW  <= '1';
             -- PC
@@ -331,7 +331,7 @@ begin
 
           when "101110" =>              -- STORE sX, ss
             -- Datapath
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
             JS  <= "11";
@@ -339,7 +339,7 @@ begin
 
           when "000100" =>              -- INPUT sX, kk
             -- Datapath
-            DR  <= IR(11 downto 8);
+            DR  <= IR(25 downto 21);
             RW  <= '1';
             MD  <= "01";
             -- PC
@@ -348,7 +348,7 @@ begin
 
           when "101100" =>              -- OUTPUT sX, kk
             -- Datapath
-            SR  <= IR(11 downto 8);
+            SR  <= IR(25 downto 21);
             MB  <= '1';
             -- PC
             JS  <= "11";
@@ -361,8 +361,8 @@ begin
             case ir(7 downto 0) is
               when "00000000" =>        -- RL sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -370,8 +370,8 @@ begin
 
               when "00000001" =>        -- RR sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -379,8 +379,8 @@ begin
 
               when "00000010" =>        -- SL0 sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -388,8 +388,8 @@ begin
 
               when "00000011" =>        -- SL1 sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -397,8 +397,8 @@ begin
 
               when "00000100" =>        -- SLA sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -406,8 +406,8 @@ begin
 
               when "00000101" =>        -- SLX sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -415,8 +415,8 @@ begin
 
               when "00000110" =>        -- SR0 sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -424,8 +424,8 @@ begin
 
               when "00000111" =>        -- SR1 sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -433,8 +433,8 @@ begin
 
               when "00001000" =>        -- SRA sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -442,8 +442,8 @@ begin
 
               when "00001001" =>        -- SRX sX
                 -- Datapath
-                DR  <= IR(11 downto 8);
-                SR  <= IR(11 downto 8);
+                DR  <= IR(25 downto 21);
+                SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
                 JS  <= "11";
@@ -716,167 +716,167 @@ begin
           when "000001" =>              -- LOAD sX, sY
             -- Datapath
             fs <= "00000";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "011001" =>              -- ADD sX, sY
             -- Datapath
             fs <= "00001";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "011011" =>              -- ADDCY sX, sY
             -- Datapath
             fs <= "00010";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "011101" =>              -- SUB sX, sY
             -- Datapath
             fs <= "00100";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "011111" =>              -- SUBCY sX, sY
             -- Datapath
             fs <= "00101";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "010101" =>              -- COMPARE sX, sY
             -- Datapath
-            SR <= IR(7 downto 4);
+            SR <= IR(20 downto 16);
             fs <= "00100";
 
           when "001011" =>              -- AND sX, sY
             -- Datapath
             fs <= "01000";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "001101" =>              -- OR sX, sY
             -- Datapath
             fs <= "01001";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "001111" =>              -- XOR sX, sY
             -- Datapath
             fs <= "01010";
-            SR <= IR(7 downto 4);
-            DR <= IR(11 downto 8);
+            SR <= IR(20 downto 16);
+            DR <= IR(25 downto 21);
             RW <= '1';
 
           when "010011" =>              -- TEST sX, sY
             -- Datapath
             fs <= "01010";
-            SR <= IR(7 downto 4);
+            SR <= IR(20 downto 16);
 
           when "000111" =>              -- FETCH sX, (sY)
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             MD <= "10";
 
           when "101111" =>              -- STORE sX, (sY)
-            SR    <= IR(7 downto 4);
+            SR    <= IR(20 downto 16);
             DM_WE <= '1';
 
           when "000101" =>              -- INPUT sX, (sY)
             -- Datapath
-            SR <= IR(7 downto 4);
+            SR <= IR(20 downto 16);
 
           when "101101" =>              -- OUTPUT sX, (sY) FIXME: register bug
-            SR <= IR(7 downto 4);
+            SR <= IR(20 downto 16);
 
           --===============================================
           --                  IM-type
           --===============================================
           when "000000" =>              -- LOAD sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "00001";
             MB <= '1';
 
           when "011000" =>              -- ADD sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "00001";
             MB <= '1';
 
           when "011010" =>              -- ADDCY sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "00010";
             MB <= '1';
 
           when "011100" =>              -- SUB sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "00100";
             MB <= '1';
 
           when "011110" =>              -- SUBCY sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "00101";
             MB <= '1';
 
           when "010100" =>              -- COMPARE sX, kk
             -- Datapath
-            SR <= IR(11 downto 8);
+            SR <= IR(25 downto 21);
             MB <= '1';
             fs <= "00100";
 
           when "001010" =>              -- AND sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "01000";
             MB <= '1';
 
           when "001100" =>              -- OR sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "01001";
             MB <= '1';
 
           when "001110" =>              -- XOR sX, kk
             -- Datapath
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             RW <= '1';
             fs <= "01010";
             MB <= '1';
 
           when "010010" =>              -- TEST sX, kk
             -- Datapath
-            SR <= IR(11 downto 8);
+            SR <= IR(25 downto 21);
             fs <= "01010";
             MB <= '1';
 
           when "000110" =>              -- FETCH sX, ss
             -- Datapath
             MB <= '1';
-            DR <= IR(11 downto 8);
+            DR <= IR(25 downto 21);
             MD <= "10";
 
           when "101110" =>              -- STORE sX, ss
             -- Datapath
             MB    <= '1';
             DM_WE <= '1';
-            SR    <= IR(11 downto 8);
+            SR    <= IR(25 downto 21);
 
           when "000100" =>              -- INPUT sX, kk FIXME: possible bug
             -- Datapath
@@ -884,7 +884,7 @@ begin
 
           when "101100" =>              -- OUTPUT sX, kk
             -- Datapath
-            SR <= IR(11 downto 8);
+            SR <= IR(25 downto 21);
             MB <= '1';
 
           --===============================================
@@ -895,61 +895,61 @@ begin
               when "00000000" =>        -- RL sX
                 -- Datapath
                 fs <= "10101";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000001" =>        -- RR sX
                 -- Datapath
                 fs <= "10110";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000010" =>        -- SL0 sX
                 -- Datapath
                 fs <= "01101";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000011" =>        -- SL1 sX
                 -- Datapath
                 fs <= "01110";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000100" =>        -- SLA sX
                 -- Datapath
                 fs <= "01111";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000101" =>        -- SLX sX
                 -- Datapath
                 fs <= "10000";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000110" =>        -- SR0 sX
                 -- Datapath
                 fs <= "10001";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00000111" =>        -- SR1 sX
                 -- Datapath
                 fs <= "10010";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00001000" =>        -- SRA sX
                 -- Datapath
                 fs <= "10100";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when "00001001" =>        -- SRX sX
                 -- Datapath
                 fs <= "10011";
-                DR <= IR(11 downto 8);
+                DR <= IR(25 downto 21);
                 RW <= '1';
 
               when others =>
