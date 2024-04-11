@@ -13,7 +13,7 @@ entity id_fsm is
     MD_BITS : integer := 2);
   port (
     IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-    clock, resetn, Z, C,
+    clock, resetn, Z, V, N C
     IE, E_PC, INT_P                                 : in  std_logic;
     INT_ACK                                         : out std_logic;
     -- Program Counter Signals
@@ -64,7 +64,7 @@ begin
     end if;
   end process;
 
-  outputs : process (y, opcode, E_PC)
+  outputs : process (y, opcode, E_PC, Z, V, N, C)
   begin
     INT_ACK <= '0';
     -- PC defaults

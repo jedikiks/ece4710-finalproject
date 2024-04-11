@@ -123,7 +123,7 @@ architecture structural of top is
       MD_BITS : integer := 2);
     port (
       IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-      clock, resetn, INT, Z, C,
+      clock, resetn, INT, Z, V, N, C
       IE, E_PC                                        : in  std_logic;
       INT_ACK                                         : out std_logic;
       -- Program Counter Signals
@@ -197,7 +197,7 @@ architecture structural of top is
 -- Instruction Memory
 
 -- Datapath
-  signal Z, C, V, N, IE : std_logic;
+  signal Z, V, N, C IE : std_logic;
   signal CI : std_logic_vector (31 downto 0);
 
 begin
@@ -319,6 +319,8 @@ begin
       resetn  => resetn,
       INT     => INT,
       Z       => Z,
+      V       => V,
+      N       => N,
       C       => C,
       IE      => IE,
       INT_ACK => INT_ACK,
