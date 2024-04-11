@@ -36,7 +36,7 @@ architecture structure of my_alu is
   component shifter is
     generic (
       N           : integer          := 8;     -- Number of bits
-      SHIFT_VALUE : std_logic_vector := "001"  -- Value to be shifted in (default is '1')
+      SHIFT_VALUE : integer := 1  -- Value to be shifted in (default is '1')
       );
     port (
       idata : in  std_logic_vector(N-1 downto 0);  -- Input data
@@ -59,7 +59,7 @@ architecture structure of my_alu is
     z12, z13, z14, z15, z16, z17, y_zero, y_negative : std_logic;
 
   signal slA0_out, slA1_out, slAA0_out, slAc_out, SRA0_out, sRA1_out,
-    sRAA7_out, sRAc_out, rLA_out, rRA_out : std_logic_vector(7 downto 0);
+    sRAA7_out, sRAc_out, rLA_out, rRA_out : std_logic_vector(N - 1 downto 0);
 
   signal empty : std_logic := '0';
 
@@ -145,34 +145,34 @@ begin
   f7 : AxorB <= A xor B;
 
 -- left-shift A, din = 0
-  f8 : shifter generic map(N => 32, SHIFT_VALUE => "000")
+  f8 : shifter generic map(N => 32, SHIFT_VALUE => 0)
     port map(idata => A, dir => '0', cin => '0', odata => slA0_out);
 
-  f9 : shifter generic map(N => 32, SHIFT_VALUE => "001")
+  f9 : shifter generic map(N => 32, SHIFT_VALUE => 1)
     port map(idata => A, dir => '0', cin => '0', odata => slA1_out);
 
-  f10 : shifter generic map(N => 32, SHIFT_VALUE => "010")
+  f10 : shifter generic map(N => 32, SHIFT_VALUE => 2)
     port map(idata => A, dir => '0', cin => '0', odata => slAA0_out);
 
-  f11 : shifter generic map(N => 32, SHIFT_VALUE => "011")
+  f11 : shifter generic map(N => 32, SHIFT_VALUE => 3)
     port map(idata => A, dir => '0', cin => y_cout, odata => slAc_out);
 
-  f12 : shifter generic map(N => 32, SHIFT_VALUE => "000")
+  f12 : shifter generic map(N => 32, SHIFT_VALUE => 0)
     port map(idata => A, dir => '1', cin => '0', odata => sRA0_out);
 
-  f13 : shifter generic map(N => 32, SHIFT_VALUE => "001")
+  f13 : shifter generic map(N => 32, SHIFT_VALUE => 1)
     port map(idata => A, dir => '1', cin => '0', odata => sRA1_out);
 
-  f14 : shifter generic map(N => 32, SHIFT_VALUE => "010")
+  f14 : shifter generic map(N => 32, SHIFT_VALUE => 2)
     port map(idata => A, dir => '1', cin => '0', odata => sRAA7_out);
 
-  f15 : shifter generic map(N => 32, SHIFT_VALUE => "011")
+  f15 : shifter generic map(N => 32, SHIFT_VALUE => 3)
     port map(idata => A, dir => '1', cin => y_cout, odata => sRAc_out);
 
-  f16 : shifter generic map(N => 32, SHIFT_VALUE => "100")
+  f16 : shifter generic map(N => 32, SHIFT_VALUE => 4)
     port map(idata => A, dir => '0', cin => '0', odata => rLA_out);
 
-  f17 : shifter generic map(N => 32, SHIFT_VALUE => "100")
+  f17 : shifter generic map(N => 32, SHIFT_VALUE => 4)
     port map(idata => A, dir => '1', cin => '0', odata => rRA_out);
 
   c4 <= '0';
