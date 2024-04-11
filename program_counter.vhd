@@ -6,7 +6,7 @@ entity program_counter is
   generic (
     ADDR_WDTH : integer := 10);
   port (clock, resetn : in  std_logic;
-        ST            : in  std_logic_vector (9 downto 0);
+        ST            : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
         SS            : in  std_logic;
         JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
         JS            : in  std_logic_vector (1 downto 0);

@@ -13,7 +13,7 @@ entity tb_top is
     ADDR_WDTH     : integer := 6;
     -- Stack
     SP_WDTH       : integer := 5;
-    DAT_WDTH      : integer := 10;
+    DAT_WDTH      : integer := 16;
     -- Control
     IR_BITS       : integer := 32;
     -- Datapath

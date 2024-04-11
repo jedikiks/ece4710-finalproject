@@ -146,7 +146,7 @@ architecture structural of top is
       ADDR_WDTH : integer);
     port (
       clock, resetn : in  std_logic;
-      ST            : in  std_logic_vector (9 downto 0);
+      ST            : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
       SS            : in  std_logic;
       JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
       JS            : in  std_logic_vector (1 downto 0);
@@ -205,7 +205,7 @@ architecture structural of top is
   signal CI             : std_logic_vector (31 downto 0);
 
 begin
-  CI <= "00000000000" & IR(20 downto 0);
+  CI <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
   --PC_t <= "000000" & PC;
 
   -- Datapath
