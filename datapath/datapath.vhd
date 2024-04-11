@@ -89,21 +89,22 @@ architecture struct of Datapath is
   type dim_2 is array ((2 ** DR_BITS) - 1 downto 0) of std_logic_vector(7 downto 0);
   signal regfile_reg : dim_2;
 
-  signal regfile_output_bus, xz, alu_out, mux_out, r_16_out : std_logic_vector(7 downto 0);
-  signal E : std_logic_vector (15 downto 0);
+  signal regfile_output_bus, xz, alu_out, mux_out, ma_reg_Q : std_logic_vector(7 downto 0);
+  signal E                                                  : std_logic_vector (15 downto 0);
 
 
 begin
 
-  ieflag : FlipFlop port map (d => SIE, clrn => '1', prn => '1', clk => clock, ena => LIE, sclr => '0', q => IE);
+  ieflag : FlipFlop port map (d   => SIE, clrn => '1', prn => '1',
+                              clk => clock, ena => LIE, sclr => '0', q => IE);
 
-  DO       <= r_16_out;
+  DO       <= ma_reg_Q;
   OUT_PORT <= regfile_output_bus;
   PORT_ID  <= mux_out;
   AO       <= mux_out(5 downto 0);
 
   alu : my_alu generic map(N => 8)
-    port map(clock => clock, resetn => resetn, A => r_16_out, B => mux_out, sel => fs, zflag => Z,
+    port map(clock => clock, resetn => resetn, A => ma_reg_Q, B => mux_out, sel => fs, zflag => Z,
              cflag => C, vflag => V, nflag => N, y => alu_out);
 
   gen_decoder_1 : gen_decoder
@@ -133,8 +134,8 @@ begin
                 sclr  => '0', D => xz, Q => regfile_reg (i));
   end generate;
 
-  r_16 : my_rege generic map (N => 8)
+  ma_reg : my_rege generic map (N => 8)
     port map (clock => clock, resetn => resetn, E => MA, sclr => MA_sclr,
-              D     => regfile_output_bus, Q => r_16_out);
+              D     => regfile_output_bus, Q => ma_reg_Q);
 
 end struct;
