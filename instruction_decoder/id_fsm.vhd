@@ -413,7 +413,7 @@ begin
                 JS  <= "11";
                 EPC <= '1';
 
-              when "00000111" =>        -- SR0 sX
+              when "00000110" =>        -- SR0 sX
                 -- Datapath
                 DR  <= IR(11 downto 8);
                 SR  <= IR(11 downto 8);
@@ -422,7 +422,7 @@ begin
                 JS  <= "11";
                 EPC <= '1';
 
-              when "00001000" =>        -- SR1 sX
+              when "00000111" =>        -- SR1 sX
                 -- Datapath
                 DR  <= IR(11 downto 8);
                 SR  <= IR(11 downto 8);
@@ -431,7 +431,7 @@ begin
                 JS  <= "11";
                 EPC <= '1';
 
-              when "00001001" =>        -- SRA sX
+              when "00001000" =>        -- SRA sX
                 -- Datapath
                 DR  <= IR(11 downto 8);
                 SR  <= IR(11 downto 8);
@@ -440,7 +440,7 @@ begin
                 JS  <= "11";
                 EPC <= '1';
 
-              when "00001010" =>        -- SRX sX
+              when "00001001" =>        -- SRX sX
                 -- Datapath
                 DR  <= IR(11 downto 8);
                 SR  <= IR(11 downto 8);
@@ -928,25 +928,25 @@ begin
                 DR <= IR(11 downto 8);
                 RW <= '1';
 
-              when "00000111" =>        -- SR0 sX
+              when "00000110" =>        -- SR0 sX
                 -- Datapath
                 fs <= "10001";
                 DR <= IR(11 downto 8);
                 RW <= '1';
 
-              when "00001000" =>        -- SR1 sX
+              when "00000111" =>        -- SR1 sX
                 -- Datapath
                 fs <= "10010";
                 DR <= IR(11 downto 8);
                 RW <= '1';
 
-              when "00001001" =>        -- SRA sX
+              when "00001000" =>        -- SRA sX
                 -- Datapath
                 fs <= "10100";
                 DR <= IR(11 downto 8);
                 RW <= '1';
 
-              when "00001010" =>        -- SRX sX
+              when "00001001" =>        -- SRX sX
                 -- Datapath
                 fs <= "10011";
                 DR <= IR(11 downto 8);
