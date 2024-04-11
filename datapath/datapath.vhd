@@ -84,7 +84,7 @@ architecture struct of Datapath is
           q    : out std_logic);
   end component;
 
-  signal reg_out, xz, alu_out, mux_out, r_16_out, r_15_out, r_14_out, r_13_out, r_12_out, r_11_out, r_10_out,
+  signal regfile_output_bus, xz, alu_out, mux_out, r_16_out, r_15_out, r_14_out, r_13_out, r_12_out, r_11_out, r_10_out,
     r_9_out, r_8_out, r_7_out, r_6_out, r_5_out, r_4_out, r_3_out, r_2_out, r_1_out, r_0_out : std_logic_vector(7 downto 0);
   signal E : std_logic_vector (15 downto 0);
 
@@ -94,7 +94,7 @@ begin
   ieflag : FlipFlop port map (d => SIE, clrn => '1', prn => '1', clk => clock, ena => LIE, sclr => '0', q => IE);
 
   DO       <= r_16_out;
-  OUT_PORT <= reg_out;
+  OUT_PORT <= regfile_output_bus;
   PORT_ID  <= mux_out;
   AO       <= mux_out(5 downto 0);
 
@@ -113,7 +113,7 @@ begin
       output => E);
 
   with MB select
-    mux_out <= reg_out when '0',
+    mux_out <= regfile_output_bus when '0',
     CI                 when others;
 
   with MD select
@@ -123,7 +123,7 @@ begin
 
 
   with SR select
-    reg_out <= r_0_out when "0000",
+    regfile_output_bus <= r_0_out when "0000",
     r_1_out            when "0001",
     r_2_out            when "0010",
     r_3_out            when "0011",
@@ -141,7 +141,7 @@ begin
     r_15_out           when others;
 
   r_16 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => MA, sclr => MA_sclr, D => reg_out, Q => r_16_out);
+    port map (clock => clock, resetn => resetn, E => MA, sclr => MA_sclr, D => regfile_output_bus, Q => r_16_out);
   r_15 : my_rege generic map (N => 8)
     port map (clock => clock, resetn => resetn, E => E(15), sclr => '0', D => xz, Q => r_15_out);
   r_14 : my_rege generic map (N => 8)
