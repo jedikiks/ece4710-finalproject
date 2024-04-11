@@ -89,7 +89,7 @@ architecture struct of Datapath is
   type dim_2 is array ((2 ** DR_BITS) - 1 downto 0) of std_logic_vector(7 downto 0);
   signal regfile_reg : dim_2;
 
-  signal regfile_output_bus, xz, alu_out, mux_out, ma_reg_Q : std_logic_vector(7 downto 0);
+  signal regfile_output_bus, regfile_input_bus, alu_out, mux_out, ma_reg_Q : std_logic_vector(7 downto 0);
   signal E                                                  : std_logic_vector (15 downto 0);
 
 
@@ -122,7 +122,7 @@ begin
     CI                            when others;
 
   with MD select
-    xz <= alu_out when "00",
+    regfile_input_bus <= alu_out when "00",
     IN_PORT       when "01",
     DI            when others;
 
@@ -131,7 +131,7 @@ begin
   regfile_gen : for i in 0 to (2 ** DR_BITS) - 1 generate
     reg_i : my_rege generic map (N => 8)
       port map (clock => clock, resetn => resetn, E => E(i),
-                sclr  => '0', D => xz, Q => regfile_reg (i));
+                sclr  => '0', D => regfile_input_bus, Q => regfile_reg (i));
   end generate;
 
   ma_reg : my_rege generic map (N => 8)
