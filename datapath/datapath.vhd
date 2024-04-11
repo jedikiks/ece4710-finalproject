@@ -129,6 +129,7 @@ begin
     IN_PORT                      when "01",
     DI                           when others;
 
+  -- Output register multiplexor
   regfile_output_bus <= regfile_reg(to_integer(unsigned(SR)));
 
   regfile_gen : for i in 0 to (2 ** DR_BITS) - 1 generate

@@ -142,11 +142,13 @@ architecture structural of top is
   end component instruction_decoder;
 
   component program_counter is
+    generic (
+      ADDR_WDTH : integer);
     port (
       clock, resetn : in  std_logic;
       ST            : in  std_logic_vector (9 downto 0);
       SS            : in  std_logic;
-      JA_CA         : in  std_logic_vector (9 downto 0);
+      JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
       JS            : in  std_logic_vector (1 downto 0);
       EPC           : in  std_logic;
       E_PC          : in  std_logic;
@@ -199,7 +201,7 @@ architecture structural of top is
 
 -- Datapath
   signal Z, V, N, C, IE : std_logic;
-  signal CI            : std_logic_vector (31 downto 0);
+  signal CI             : std_logic_vector (31 downto 0);
 
 begin
   CI <= "00000000000" & IR(20 downto 0);
@@ -294,12 +296,14 @@ begin
 
   -- Program Counter
   program_counter_1 : program_counter
+    generic map (
+      ADDR_WDTH => IM_ADDR_BITS)
     port map (
       clock   => clock,
       resetn  => resetn,
       ST      => DO,
       SS      => SS,
-      JA_CA   => IR(9 downto 0),
+      JA_CA   => IR(15 downto 0),
       JS      => JS,
       EPC     => EPC,
       E_PC    => E_PC,

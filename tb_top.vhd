@@ -6,7 +6,7 @@ entity tb_top is
   generic (
     -- Instruction Memory
     IM_DIN_BITS   : integer := 32;
-    IM_ADDR_BITS  : integer := 10;
+    IM_ADDR_BITS  : integer := 16;
     -- Data Memory
     DI_WDTH       : integer := 32;
     DO_WDTH       : integer := 32;
