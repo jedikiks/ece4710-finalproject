@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity tb_top is
   generic (
     -- Instruction Memory
-    IM_DIN_BITS   : integer := 18;
+    IM_DIN_BITS   : integer := 32;
     IM_ADDR_BITS  : integer := 10;
     -- Data Memory
     DI_WDTH       : integer := 32;
@@ -140,19 +140,19 @@ begin
     im_enb <= '1';
 
     --At address 0:
-    im_dinb <= "000000" & "0000" & "00000010";  -- LOAD s0, #2
+    im_dinb <= "00000000000000" & "000000" & "0000" & "00000010";  -- LOAD s0, #2
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "101110" & "0000" & x"FF";  -- STORE s0, $FF
+    im_dinb <= "00000000000000" & "101110" & "0000" & x"FF";  -- STORE s0, $FF
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "000000" & "0001" & "00000001";  -- LOAD s0, #2
+    im_dinb <= "00000000000000" & "000000" & "0001" & "00000001";  -- LOAD s0, #2
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "000110" & "1000" & x"FF";  -- FETCH s8, $FF
+    im_dinb <= "00000000000000" & "000110" & "1000" & x"FF";  -- FETCH s8, $FF
     wait for clock_period;
 
     --======================

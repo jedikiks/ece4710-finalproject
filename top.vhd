@@ -90,14 +90,14 @@ architecture structural of top is
       ena   : in  std_logic;
       wea   : in  std_logic_vector(0 downto 0);
       addra : in  std_logic_vector(9 downto 0);
-      dina  : in  std_logic_vector(17 downto 0);
-      douta : out std_logic_vector(17 downto 0);
+      dina  : in  std_logic_vector(31 downto 0);
+      douta : out std_logic_vector(31 downto 0);
       clkb  : in  std_logic;
       enb   : in  std_logic;
       web   : in  std_logic_vector(0 downto 0);
       addrb : in  std_logic_vector(9 downto 0);
-      dinb  : in  std_logic_vector(17 downto 0);
-      doutb : out std_logic_vector(17 downto 0)
+      dinb  : in  std_logic_vector(31 downto 0);
+      doutb : out std_logic_vector(31 downto 0)
       );
   end component instr_mem;
 
@@ -169,6 +169,7 @@ architecture structural of top is
 
 -- PC
   signal IR  : std_logic_vector (IR_BITS - 1 downto 0);
+  signal IR_t  : std_logic_vector (31 downto 0);
   signal SS  : std_logic;
   signal JS  : std_logic_vector (1 downto 0);
   signal EPC : std_logic;
@@ -200,6 +201,7 @@ architecture structural of top is
   signal CI : std_logic_vector (31 downto 0);
 
 begin
+  IR <= IR_t (17 downto 0);
   CI <= x"000000" & IR(7 downto 0);
 
   -- Datapath
@@ -268,7 +270,7 @@ begin
       wea(0) => '0',
       addra  => PC,
       dina   => (others => '0'),
-      douta  => IR,
+      douta  => IR_t,
       clkb   => clock,
       enb    => im_enb,
       web(0) => im_web,
