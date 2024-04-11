@@ -43,11 +43,16 @@ end Datapath;
 
 architecture struct of Datapath is
 
-  component mydec4to16 is
-    port (DR : in  std_logic_vector (3 downto 0);
-          RW : in  std_logic;
-          E  : out std_logic_vector (15 downto 0));
-  end component;
+  component gen_decoder is
+    generic (
+      NI : integer;
+      NO : integer;
+      EN : boolean);
+    port (
+      input  : in  std_logic_vector (NI - 1 downto 0);
+      e      : in  std_logic;
+      output : out std_logic_vector (NO - 1 downto 0));
+  end component gen_decoder;
 
   component my_alu is
     generic (N : integer := 8);
@@ -97,7 +102,15 @@ begin
     port map(clock => clock, resetn => resetn, A => r_16_out, B => mux_out, sel => fs, zflag => Z,
              cflag => C, vflag => V, nflag => N, y => alu_out);
 
-  dec : mydec4to16 port map(DR => DR, RW => RW, E => E);
+  gen_decoder_1 : gen_decoder
+    generic map (
+      NI => DR_BITS,
+      NO => 2 ** DR_BITS,
+      EN => true)
+    port map (
+      input  => DR,
+      e      => RW,
+      output => E);
 
   with MB select
     mux_out <= reg_out when '0',
