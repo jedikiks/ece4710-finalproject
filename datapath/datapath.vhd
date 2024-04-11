@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
+use ieee.numeric_std.all;
 
 entity Datapath is
   generic (
@@ -84,8 +85,11 @@ architecture struct of Datapath is
           q    : out std_logic);
   end component;
 
-  signal regfile_output_bus, xz, alu_out, mux_out, r_16_out, r_15_out, r_14_out, r_13_out, r_12_out, r_11_out, r_10_out,
-    r_9_out, r_8_out, r_7_out, r_6_out, r_5_out, r_4_out, r_3_out, r_2_out, r_1_out, r_0_out : std_logic_vector(7 downto 0);
+-- 2D array for regis output
+  type dim_2 is array ((2 ** DR_BITS) - 1 downto 0) of std_logic_vector(7 downto 0);
+  signal regfile_reg : dim_2;
+
+  signal regfile_output_bus, xz, alu_out, mux_out, r_16_out : std_logic_vector(7 downto 0);
   signal E : std_logic_vector (15 downto 0);
 
 
@@ -114,66 +118,23 @@ begin
 
   with MB select
     mux_out <= regfile_output_bus when '0',
-    CI                 when others;
+    CI                            when others;
 
   with MD select
     xz <= alu_out when "00",
     IN_PORT       when "01",
     DI            when others;
 
+  regfile_output_bus <= regfile_reg(to_integer(unsigned(SR)));
 
-  with SR select
-    regfile_output_bus <= r_0_out when "0000",
-    r_1_out            when "0001",
-    r_2_out            when "0010",
-    r_3_out            when "0011",
-    r_4_out            when "0100",
-    r_5_out            when "0101",
-    r_6_out            when "0110",
-    r_7_out            when "0111",
-    r_8_out            when "1000",
-    r_9_out            when "1001",
-    r_10_out           when "1010",
-    r_11_out           when "1011",
-    r_12_out           when "1100",
-    r_13_out           when "1101",
-    r_14_out           when "1110",
-    r_15_out           when others;
+  regfile_gen : for i in 0 to (2 ** DR_BITS) - 1 generate
+    reg_i : my_rege generic map (N => 8)
+      port map (clock => clock, resetn => resetn, E => E(i),
+                sclr  => '0', D => xz, Q => regfile_reg (i));
+  end generate;
 
   r_16 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => MA, sclr => MA_sclr, D => regfile_output_bus, Q => r_16_out);
-  r_15 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(15), sclr => '0', D => xz, Q => r_15_out);
-  r_14 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(14), sclr => '0', D => xz, Q => r_14_out);
-  r_13 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(13), sclr => '0', D => xz, Q => r_13_out);
-  r_12 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(12), sclr => '0', D => xz, Q => r_12_out);
-  r_11 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(11), sclr => '0', D => xz, Q => r_11_out);
-  r_10 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(10), sclr => '0', D => xz, Q => r_10_out);
-  r_9 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(9), sclr => '0', D => xz, Q => r_9_out);
-  r_8 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(8), sclr => '0', D => xz, Q => r_8_out);
-  r_7 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(7), sclr => '0', D => xz, Q => r_7_out);
-  r_6 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(6), sclr => '0', D => xz, Q => r_6_out);
-  r_5 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(5), sclr => '0', D => xz, Q => r_5_out);
-  r_4 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(4), sclr => '0', D => xz, Q => r_4_out);
-  r_3 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(3), sclr => '0', D => xz, Q => r_3_out);
-  r_2 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(2), sclr => '0', D => xz, Q => r_2_out);
-  r_1 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(1), sclr => '0', D => xz, Q => r_1_out);
-  r_0 : my_rege generic map (N => 8)
-    port map (clock => clock, resetn => resetn, E => E(0), sclr => '0', D => xz, Q => r_0_out);
-
+    port map (clock => clock, resetn => resetn, E => MA, sclr => MA_sclr,
+              D     => regfile_output_bus, Q => r_16_out);
 
 end struct;

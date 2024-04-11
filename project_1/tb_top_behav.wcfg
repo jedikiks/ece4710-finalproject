@@ -11,12 +11,12 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="52430000fs"></ZoomStartTime>
-      <ZoomEndTime time="290235483fs"></ZoomEndTime>
-      <Cursor1Time time="1000000000fs"></Cursor1Time>
+      <ZoomStartTime time="70000000fs"></ZoomStartTime>
+      <ZoomEndTime time="336447711fs"></ZoomEndTime>
+      <Cursor1Time time="131904000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="188"></NameColumnWidth>
+      <NameColumnWidth column_width="170"></NameColumnWidth>
       <ValueColumnWidth column_width="91"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="8" />
@@ -441,102 +441,104 @@
          <obj_property name="CustomSignalColor">#800000</obj_property>
          <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
-      <wvobject type="group" fp_name="group318">
-         <obj_property name="label">register file</obj_property>
-         <obj_property name="DisplayName">label</obj_property>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_15_out">
-            <obj_property name="ElementShortName">r_15_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_15_out[7:0]</obj_property>
+      <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg">
+         <obj_property name="ElementShortName">regfile_reg[15:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">regfile_reg[15:0][7:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[15]">
+            <obj_property name="ElementShortName">[15][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[15][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_14_out">
-            <obj_property name="ElementShortName">r_14_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_14_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[14]">
+            <obj_property name="ElementShortName">[14][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[14][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_13_out">
-            <obj_property name="ElementShortName">r_13_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_13_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[13]">
+            <obj_property name="ElementShortName">[13][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[13][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_12_out">
-            <obj_property name="ElementShortName">r_12_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_12_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[12]">
+            <obj_property name="ElementShortName">[12][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[12][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_11_out">
-            <obj_property name="ElementShortName">r_11_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_11_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[11]">
+            <obj_property name="ElementShortName">[11][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[11][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_10_out">
-            <obj_property name="ElementShortName">r_10_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_10_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[10]">
+            <obj_property name="ElementShortName">[10][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[10][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_9_out">
-            <obj_property name="ElementShortName">r_9_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_9_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[9]">
+            <obj_property name="ElementShortName">[9][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[9][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_8_out">
-            <obj_property name="ElementShortName">r_8_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_8_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[8]">
+            <obj_property name="ElementShortName">[8][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[8][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_7_out">
-            <obj_property name="ElementShortName">r_7_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_7_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[7]">
+            <obj_property name="ElementShortName">[7][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[7][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_6_out">
-            <obj_property name="ElementShortName">r_6_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_6_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[6]">
+            <obj_property name="ElementShortName">[6][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[6][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_5_out">
-            <obj_property name="ElementShortName">r_5_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_5_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[5]">
+            <obj_property name="ElementShortName">[5][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[5][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_4_out">
-            <obj_property name="ElementShortName">r_4_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_4_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[4]">
+            <obj_property name="ElementShortName">[4][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_3_out">
-            <obj_property name="ElementShortName">r_3_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_3_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[3]">
+            <obj_property name="ElementShortName">[3][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_2_out">
-            <obj_property name="ElementShortName">r_2_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_2_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[2]">
+            <obj_property name="ElementShortName">[2][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_1_out">
-            <obj_property name="ElementShortName">r_1_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_1_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[1]">
+            <obj_property name="ElementShortName">[1][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
-         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/r_0_out">
-            <obj_property name="ElementShortName">r_0_out[7:0]</obj_property>
-            <obj_property name="ObjectShortName">r_0_out[7:0]</obj_property>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[0]">
+            <obj_property name="ElementShortName">[0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][7:0]</obj_property>
             <obj_property name="CustomSignalColor">#FF00FF</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
          </wvobject>
