@@ -8,8 +8,8 @@ entity tb_top is
     IM_DIN_BITS   : integer := 18;
     IM_ADDR_BITS  : integer := 10;
     -- Data Memory
-    DI_WDTH       : integer := 8;
-    DO_WDTH       : integer := 8;
+    DI_WDTH       : integer := 32;
+    DO_WDTH       : integer := 32;
     ADDR_WDTH     : integer := 6;
     -- Stack
     SP_WDTH       : integer := 5;
@@ -144,25 +144,16 @@ begin
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "100000" & "0000" & "00000001";  -- RR s0
+    im_dinb <= "101110" & "0000" & x"FF";  -- STORE s0, $FF
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "100000" & "0000" & "00000001";  -- RR s0
+    im_dinb <= "000000" & "0001" & "00000001";  -- LOAD s0, #2
     wait for clock_period;
 
-
-
-    --im_dinb <= "000000" & "0000" & "00000010";  -- LOAD s0, #2
-    --wait for clock_period;
-
-    --im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    --im_dinb <= "000000" & "0001" & "00000010";  -- LOAD s1, #2
-    --wait for clock_period;
-
-    --im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    --im_dinb <= "011001" & "0000" & "0001" & "0000";  -- ADD s0, s1
-    --wait for clock_period;
+    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+    im_dinb <= "000110" & "1000" & x"FF";  -- FETCH s8, $FF
+    wait for clock_period;
 
     --======================
     -- Finish loading

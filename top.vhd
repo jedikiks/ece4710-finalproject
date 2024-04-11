@@ -191,16 +191,16 @@ architecture structural of top is
 -- Data Memory
   signal DM_AO   : std_logic_vector (ADDR_WDTH - 1 downto 0);
   signal DM_DI   : std_logic_vector (DI_WDTH - 1 downto 0);
-  signal DM_DI_t : std_logic_vector (31 downto 0);
   signal DM_DO   : std_logic_vector (DO_WDTH - 1 downto 0);
 
 -- Instruction Memory
 
 -- Datapath
   signal Z, C, V, N, IE : std_logic;
+  signal CI : std_logic_vector (31 downto 0);
 
 begin
-  DM_DI <= DM_DI_t (7 downto 0);
+  CI <= x"000000" & IR(7 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
@@ -216,8 +216,8 @@ begin
       clock        => clock,
       resetn       => resetn,
       DR           => DR,
-      CI           => x"000000" & IR(7 downto 0),
-      DI           => x"000000" & DM_DO,
+      CI           => CI,
+      DI           => DM_DO,
       MD           => MD,
       fs           => fs,
       MB           => MB,
@@ -242,7 +242,7 @@ begin
       WRITE_STROBE => WRITE_STROBE,
       OUT_PORT     => OUT_PORT,
       AO           => DM_AO,
-      DO           => DM_DI_t);
+      DO           => DM_DI);
 
   -- Data memory
   ram_emul_1 : ram_emul
