@@ -464,36 +464,8 @@ begin
             EPC <= '1';
 
           when "110001" =>              -- CALL extensions: with flags
-            case ir(11 downto 10) is
-              when "00" =>              -- CALL C, aaa
-                if C = '1' then
-                  -- Stack
-                  en  <= '1';
-                  we  <= '1';
-                  -- PC
-                  JS  <= "00";
-                  EPC <= '1';
-                else
-                  -- PC
-                  JS  <= "11";
-                  EPC <= '1';
-                end if;
-
-              when "01" =>              -- CALL NC, aaa
-                if C = '0' then
-                  -- Stack
-                  en  <= '1';
-                  we  <= '1';
-                  -- PC
-                  JS  <= "00";
-                  EPC <= '1';
-                else
-                  -- PC
-                  JS  <= "11";
-                  EPC <= '1';
-                end if;
-
-              when "10" =>              -- CALL Z, aaa
+            case ir(25 downto 23) is
+              when "000" =>              -- CALL Z, aaa
                 if Z = '1' then
                   -- Stack
                   en  <= '1';
@@ -507,7 +479,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "11" =>              -- CALL NZ, aaa
+              when "001" =>              -- CALL NZ, aaa
                 if Z = '0' then
                   -- Stack
                   en  <= '1';
@@ -520,6 +492,91 @@ begin
                   JS  <= "11";
                   EPC <= '1';
                 end if;
+
+              when "010" =>              -- CALL V, aaa
+                if V = '1' then
+                  -- Stack
+                  en  <= '1';
+                  we  <= '1';
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "011" =>              -- CALL NV, aaa
+                if V = '0' then
+                  -- Stack
+                  en  <= '1';
+                  we  <= '1';
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "100" =>              -- CALL N, aaa
+                if N = '1' then
+                  -- Stack
+                  en  <= '1';
+                  we  <= '1';
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "101" =>              -- CALL NN, aaa
+                if N = '0' then
+                  -- Stack
+                  en  <= '1';
+                  we  <= '1';
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "110" =>              -- CALL C, aaa
+                if C = '1' then
+                  -- Stack
+                  en  <= '1';
+                  we  <= '1';
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "111" =>              -- CALL NC, aaa
+                if C = '0' then
+                  -- Stack
+                  en  <= '1';
+                  we  <= '1';
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
               when others =>
             end case;
 
@@ -529,30 +586,8 @@ begin
             EPC <= '1';
 
           when "110101" =>              -- JUMP extensions: with flags
-            case ir(11 downto 10) is
-              when "00" =>              -- JUMP C, aaa
-                if C = '1' then
-                  -- PC
-                  JS  <= "00";
-                  EPC <= '1';
-                else
-                  -- PC
-                  JS  <= "11";
-                  EPC <= '1';
-                end if;
-
-              when "01" =>              -- JUMP NC, aaa
-                if C = '0' then
-                  -- PC
-                  JS  <= "00";
-                  EPC <= '1';
-                else
-                  -- PC
-                  JS  <= "11";
-                  EPC <= '1';
-                end if;
-
-              when "10" =>              -- JUMP Z, aaa
+            case ir(25 downto 23) is
+              when "000" =>              -- JUMP Z, aaa
                 if Z = '1' then
                   -- PC
                   JS  <= "00";
@@ -563,7 +598,7 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "11" =>              -- CALL NZ, aaa
+              when "001" =>              -- JUMP NZ, aaa
                 if Z = '0' then
                   -- PC
                   JS  <= "00";
@@ -573,6 +608,73 @@ begin
                   JS  <= "11";
                   EPC <= '1';
                 end if;
+
+              when "010" =>              -- JUMP V, aaa
+                if V = '1' then
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "011" =>              -- JUMP NV, aaa
+                if V = '0' then
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "100" =>              -- JUMP N, aaa
+                if N = '1' then
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "101" =>              -- JUMP NN, aaa
+                if N = '0' then
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "110" =>              -- JUMP C, aaa
+                if C = '1' then
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "111" =>              -- JUMP NC, aaa
+                if C = '0' then
+                  -- PC
+                  JS  <= "00";
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
               when others =>
             end case;
 
@@ -588,36 +690,8 @@ begin
             en  <= '1';
 
           when "101011" =>              -- RETURN extensions: with flags
-            case ir(11 downto 0) is
-              when "000000000000" =>    -- RETURN C
-                if C = '1' then
-                  -- PC
-                  SS  <= '1';
-                  JS  <= "11";
-                  EPC <= '1';
-                  -- Stack
-                  en  <= '1';
-                else
-                  -- PC
-                  JS  <= "11";
-                  EPC <= '1';
-                end if;
-
-              when "000000000001" =>    -- RETURN NC
-                if C = '0' then
-                  -- PC
-                  SS  <= '1';
-                  JS  <= "11";
-                  EPC <= '1';
-                  -- Stack
-                  en  <= '1';
-                else
-                  -- PC
-                  JS  <= "11";
-                  EPC <= '1';
-                end if;
-
-              when "000000000010" =>    -- RETURN Z
+            case ir(25 downto 0) is
+              when "00000000000000000000000000" =>              -- RETURN Z, aaa
                 if Z = '1' then
                   -- PC
                   SS  <= '1';
@@ -631,8 +705,92 @@ begin
                   EPC <= '1';
                 end if;
 
-              when "000000000011" =>    -- RETURN NZ
+              when "00000000000000000000000001" =>              -- RETURN NZ, aaa
                 if Z = '0' then
+                  -- PC
+                  SS  <= '1';
+                  JS  <= "11";
+                  EPC <= '1';
+                  -- Stack
+                  en  <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "00000000000000000000000010" =>              -- RETURN V, aaa
+                if V = '1' then
+                  -- PC
+                  SS  <= '1';
+                  JS  <= "11";
+                  EPC <= '1';
+                  -- Stack
+                  en  <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "00000000000000000000000011" =>              -- RETURN NV, aaa
+                if V = '0' then
+                  -- PC
+                  SS  <= '1';
+                  JS  <= "11";
+                  EPC <= '1';
+                  -- Stack
+                  en  <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "00000000000000000000000100" =>              -- RETURN N, aaa
+                if N = '1' then
+                  -- PC
+                  SS  <= '1';
+                  JS  <= "11";
+                  EPC <= '1';
+                  -- Stack
+                  en  <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "00000000000000000000000101" =>              -- RETURN NN, aaa
+                if N = '0' then
+                  -- PC
+                  SS  <= '1';
+                  JS  <= "11";
+                  EPC <= '1';
+                  -- Stack
+                  en  <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "00000000000000000000000110" =>              -- RETURN C, aaa
+                if C = '1' then
+                  -- PC
+                  SS  <= '1';
+                  JS  <= "11";
+                  EPC <= '1';
+                  -- Stack
+                  en  <= '1';
+                else
+                  -- PC
+                  JS  <= "11";
+                  EPC <= '1';
+                end if;
+
+              when "00000000000000000000000111" =>              -- RETURN NC, aaa
+                if C = '0' then
                   -- PC
                   SS  <= '1';
                   JS  <= "11";
@@ -649,7 +807,7 @@ begin
 
           when "111100" =>              -- ENABLE/DISABLE interrupt ext
             case ir(11 downto 0) is
-              when "000000000000" =>    -- DISABLE INTERRUPT
+              when "00000000000000000000000000" =>    -- DISABLE INTERRUPT
                 -- Datapath
                 SIE <= '0';
                 LIE <= '1';
@@ -657,7 +815,7 @@ begin
                 JS  <= "11";
                 EPC <= '1';
 
-              when "000000000001" =>    -- ENABLE INTERRUPT
+              when "00000000000000000000000001" =>    -- ENABLE INTERRUPT
                 -- Datapath
                 SIE <= '1';
                 LIE <= '1';
@@ -669,7 +827,7 @@ begin
 
           when "111000" =>              -- RETURNI ENABLE/DISABLE interrupt ext
             case ir(11 downto 0) is
-              when "000000000000" =>    -- RETURNI DISABLE
+              when "00000000000000000000000000" =>    -- RETURNI DISABLE
                 -- Datapath
                 SIE <= '0';
                 LIE <= '1';
@@ -680,7 +838,7 @@ begin
                 -- Stack
                 en  <= '1';
 
-              when "000000000001" =>    -- RETURNI ENABLE
+              when "00000000000000000000000001" =>    -- RETURNI ENABLE
                 -- Datapath
                 SIE <= '1';
                 LIE <= '1';
