@@ -31,7 +31,7 @@ begin
                 elsif SHIFT_VALUE = 3 then
                     odata <= idata(N - 2 downto 0) & cin;
                 elsif SHIFT_VALUE = 4 then
-                    odata <= idata(N - 2 downto 0) & idata(7);
+                    odata <= idata(N - 2 downto 0) & idata(N - 1);
                 end if;
             when '1' =>
                 if SHIFT_VALUE = 1 then  -- Shift right
