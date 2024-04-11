@@ -153,7 +153,7 @@ architecture structural of top is
       EPC           : in  std_logic;
       E_PC          : in  std_logic;
       sclr_PC       : in  std_logic;
-      PC            : out std_logic_vector (9 downto 0));
+      PC            : out std_logic_vector (IM_ADDR_BITS - 1 downto 0));
   end component program_counter;
 
   component ram_emul is
@@ -175,7 +175,8 @@ architecture structural of top is
   signal SS   : std_logic;
   signal JS   : std_logic_vector (1 downto 0);
   signal EPC  : std_logic;
-  signal PC   : std_logic_vector (9 downto 0);
+  signal PC   : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+  --signal PC_t   : std_logic_vector (9 downto 0);
 
 -- Instruction Decoder
   signal INT_ACK : std_logic;
@@ -205,6 +206,7 @@ architecture structural of top is
 
 begin
   CI <= "00000000000" & IR(20 downto 0);
+  --PC_t <= "000000" & PC;
 
   -- Datapath
   Datapath_1 : Datapath
@@ -270,13 +272,13 @@ begin
       clka   => clock,
       ena    => '1',
       wea(0) => '0',
-      addra  => PC,
+      addra  => PC(9 downto 0),
       dina   => (others => '0'),
       douta  => IR,
       clkb   => clock,
       enb    => im_enb,
       web(0) => im_web,
-      addrb  => im_addrb,
+      addrb  => im_addrb(9 downto 0),
       dinb   => im_dinb);
   --doutb => im_doutb);
 

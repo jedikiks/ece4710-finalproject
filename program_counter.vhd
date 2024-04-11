@@ -13,7 +13,7 @@ entity program_counter is
         EPC           : in  std_logic;
         E_PC          : in  std_logic;
         sclr_PC       : in  std_logic;
-        PC            : out std_logic_vector (9 downto 0));
+        PC            : out std_logic_vector (ADDR_WDTH - 1 downto 0));
 end program_counter;
 
 architecture structure of program_counter is
