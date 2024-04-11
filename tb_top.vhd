@@ -15,11 +15,11 @@ entity tb_top is
     SP_WDTH       : integer := 5;
     DAT_WDTH      : integer := 10;
     -- Control
-    IR_BITS       : integer := 18;
+    IR_BITS       : integer := 32;
     -- Datapath
     FS_BITS       : integer := 5;
-    DR_BITS       : integer := 4;
-    SR_BITS       : integer := 4;
+    DR_BITS       : integer := 5;
+    SR_BITS       : integer := 5;
     MD_BITS       : integer := 2;
     PORT_ID_BITS  : integer := 32;
     OUT_PORT_BITS : integer := 32;

@@ -201,7 +201,6 @@ architecture structural of top is
   signal CI : std_logic_vector (31 downto 0);
 
 begin
-  IR <= IR_t (17 downto 0);
   CI <= x"000000" & IR(7 downto 0);
 
   -- Datapath
@@ -270,7 +269,7 @@ begin
       wea(0) => '0',
       addra  => PC,
       dina   => (others => '0'),
-      douta  => IR_t,
+      douta  => IR,
       clkb   => clock,
       enb    => im_enb,
       web(0) => im_web,
