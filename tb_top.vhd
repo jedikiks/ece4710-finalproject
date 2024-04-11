@@ -21,9 +21,9 @@ entity tb_top is
     DR_BITS       : integer := 4;
     SR_BITS       : integer := 4;
     MD_BITS       : integer := 2;
-    PORT_ID_BITS  : integer := 8;
-    OUT_PORT_BITS : integer := 8;
-    IN_PORT_BITS  : integer := 8);
+    PORT_ID_BITS  : integer := 32;
+    OUT_PORT_BITS : integer := 32;
+    IN_PORT_BITS  : integer := 32);
 end tb_top;
 
 architecture behavior of tb_top is

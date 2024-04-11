@@ -55,8 +55,8 @@ architecture structural of top is
     port (
       clock, resetn : in  std_logic;
       DR            : in  std_logic_vector (DR_BITS - 1 downto 0);
-      CI            : in  std_logic_vector (7 downto 0);
-      DI            : in  std_logic_vector (7 downto 0);
+      CI            : in  std_logic_vector (31 downto 0);
+      DI            : in  std_logic_vector (31 downto 0);
       MD            : in  std_logic_vector (MD_BITS - 1 downto 0);
       fs            : in  std_logic_vector (FS_BITS - 1 downto 0);
       MB            : in  std_logic;
@@ -81,8 +81,7 @@ architecture structural of top is
       WRITE_STROBE  : out std_logic;
       OUT_PORT      : out std_logic_vector (OUT_PORT_BITS - 1 downto 0);
       AO            : out std_logic_vector (5 downto 0);
-      DO            : out std_logic_vector (7 downto 0));
-
+      DO            : out std_logic_vector (31 downto 0));
   end component Datapath;
 
   component instr_mem is
@@ -190,9 +189,10 @@ architecture structural of top is
   signal SP : std_logic_vector (SP_WDTH - 1 downto 0);
 
 -- Data Memory
-  signal DM_AO : std_logic_vector (ADDR_WDTH - 1 downto 0);
-  signal DM_DI : std_logic_vector (DI_WDTH - 1 downto 0);
-  signal DM_DO : std_logic_vector (DO_WDTH - 1 downto 0);
+  signal DM_AO   : std_logic_vector (ADDR_WDTH - 1 downto 0);
+  signal DM_DI   : std_logic_vector (DI_WDTH - 1 downto 0);
+  signal DM_DI_t : std_logic_vector (31 downto 0);
+  signal DM_DO   : std_logic_vector (DO_WDTH - 1 downto 0);
 
 -- Instruction Memory
 
@@ -200,6 +200,7 @@ architecture structural of top is
   signal Z, C, V, N, IE : std_logic;
 
 begin
+  DM_DI <= DM_DI_t (7 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
@@ -215,8 +216,8 @@ begin
       clock        => clock,
       resetn       => resetn,
       DR           => DR,
-      CI           => IR(7 downto 0),
-      DI           => DM_DO,
+      CI           => x"000000" & IR(7 downto 0),
+      DI           => x"000000" & DM_DO,
       MD           => MD,
       fs           => fs,
       MB           => MB,
@@ -241,7 +242,7 @@ begin
       WRITE_STROBE => WRITE_STROBE,
       OUT_PORT     => OUT_PORT,
       AO           => DM_AO,
-      DO           => DM_DI);
+      DO           => DM_DI_t);
 
   -- Data memory
   ram_emul_1 : ram_emul
