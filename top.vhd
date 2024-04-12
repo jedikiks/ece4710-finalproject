@@ -24,22 +24,24 @@ entity top is
     MD_BITS       : integer := 2;
     PORT_ID_BITS  : integer := 32;
     OUT_PORT_BITS : integer := 32;
-    IN_PORT_BITS  : integer := 32);
+    IN_PORT_BITS  : integer := 32;
+    -- Program Counter
+    OFFSET_WDTH   : integer := 7);
 
   port (
     -- Input signals
-    clock, resetn, INT        : in  std_logic;
+    clock, resetn, INT : in  std_logic;
     -- PC signals
-    E_PC, sclr_PC             : in  std_logic;
+    E_PC, sclr_PC      : in  std_logic;
     -- IM signals
-    im_enb, im_web            : in  std_logic;
-    im_dinb                   : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
-    im_addrb                  : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+    im_enb, im_web     : in  std_logic;
+    im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
+    im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
     -- Output signals
-    IN_PORT                   : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
+    IN_PORT            : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
     --READ_STROBE, WRITE_STROBE : out std_logic;
-    PORT_ID                   : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-    OUT_PORT                  : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
+    PORT_ID            : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
+    OUT_PORT           : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
 end top;
 
 architecture structural of top is
@@ -131,9 +133,9 @@ architecture structural of top is
       E_PC    : in  std_logic;
       INT_P   : in  std_logic;
       INT_ACK : out std_logic;
-      JS      : out std_logic_vector (1 downto 0);
+      JS      : out std_logic_vector (2 downto 0);
       EPC     : out std_logic;
-      SS      : out std_logic;
+      SS      : out std_logic_vector (1 downto 0);
       DR      : out std_logic_vector (DR_BITS - 1 downto 0);
       SR      : out std_logic_vector (SR_BITS - 1 downto 0);
       MD      : out std_logic_vector (MD_BITS - 1 downto 0);
@@ -156,13 +158,15 @@ architecture structural of top is
 
   component program_counter is
     generic (
-      ADDR_WDTH : integer);
+      ADDR_WDTH   : integer;
+      OFFSET_WDTH : integer);
     port (
       clock, resetn : in  std_logic;
       ST            : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
-      SS            : in  std_logic;
+      SS            : in  std_logic_vector (1 downto 0);
+      offset        : in  std_logic_vector (OFFSET_WDTH - 1 downto 0);
       JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
-      JS            : in  std_logic_vector (1 downto 0);
+      JS            : in  std_logic_vector (2 downto 0);
       EPC           : in  std_logic;
       E_PC          : in  std_logic;
       sclr_PC       : in  std_logic;
@@ -183,12 +187,12 @@ architecture structural of top is
   end component ram_emul;
 
 -- PC
-  signal IR   : std_logic_vector (IR_BITS - 1 downto 0);
-  signal IR_t : std_logic_vector (31 downto 0);
-  signal SS   : std_logic;
-  signal JS   : std_logic_vector (1 downto 0);
-  signal EPC  : std_logic;
-  signal PC   : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+  signal IR     : std_logic_vector (IR_BITS - 1 downto 0);
+  signal SS     : std_logic_vector (1 downto 0);
+  signal JS     : std_logic_vector (2 downto 0);
+  signal EPC    : std_logic;
+  signal PC     : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+  signal offset : std_logic_vector (OFFSET_WDTH - 1 downto 0);
   --signal PC_t   : std_logic_vector (9 downto 0);
 
 -- Instruction Decoder
@@ -218,9 +222,10 @@ architecture structural of top is
   signal CI             : std_logic_vector (31 downto 0);
 
 begin
-  CI <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
+  CI   <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
   --PC_t <= "000000" & PC;
   INTP <= '0';
+  offset <= IR(22 downto 16);
 
   -- Datapath
   Datapath_1 : Datapath
@@ -233,36 +238,36 @@ begin
       SR_BITS       => SR_BITS,
       MD_BITS       => MD_BITS)
     port map (
-      clock        => clock,
-      resetn       => resetn,
-      DR           => DR,
-      CI           => CI,
-      DI           => DM_DO,
-      MD           => MD,
-      fs           => fs,
-      MB           => MB,
-      RW           => RW,
-      MA           => MA,
-      MA_sclr      => MA_sclr,
-      SIE          => SIE,
-      LIE          => LIE,
-      INTP         => INTP,
-      RI           => RI,
-      RS           => RS,
-      WS           => WS,
-      IN_PORT      => IN_PORT,
-      SR           => SR,
-      Z            => Z,
-      C            => C,
-      V            => V,
-      N            => N,
-      IE           => IE,
-      PORT_ID      => PORT_ID,
+      clock    => clock,
+      resetn   => resetn,
+      DR       => DR,
+      CI       => CI,
+      DI       => DM_DO,
+      MD       => MD,
+      fs       => fs,
+      MB       => MB,
+      RW       => RW,
+      MA       => MA,
+      MA_sclr  => MA_sclr,
+      SIE      => SIE,
+      LIE      => LIE,
+      INTP     => INTP,
+      RI       => RI,
+      RS       => RS,
+      WS       => WS,
+      IN_PORT  => IN_PORT,
+      SR       => SR,
+      Z        => Z,
+      C        => C,
+      V        => V,
+      N        => N,
+      IE       => IE,
+      PORT_ID  => PORT_ID,
       --READ_STROBE  => READ_STROBE,
       --WRITE_STROBE => WRITE_STROBE,
-      OUT_PORT     => OUT_PORT,
-      AO           => DM_AO,
-      DO           => DM_DI);
+      OUT_PORT => OUT_PORT,
+      AO       => DM_AO,
+      DO       => DM_DI);
 
   -- Data memory
   ram_emul_1 : ram_emul
@@ -313,12 +318,14 @@ begin
   -- Program Counter
   program_counter_1 : program_counter
     generic map (
-      ADDR_WDTH => IM_ADDR_BITS)
+      ADDR_WDTH   => IM_ADDR_BITS,
+      OFFSET_WDTH => OFFSET_WDTH)
     port map (
       clock   => clock,
       resetn  => resetn,
       ST      => DO,
       SS      => SS,
+      offset  => offset,
       JA_CA   => IR(15 downto 0),
       JS      => JS,
       EPC     => EPC,
@@ -357,7 +364,7 @@ begin
       MA_sclr => MA_sclr,
       SIE     => SIE,
       LIE     => LIE,
-      INT_P    => '0',
+      INT_P   => '0',
       RI      => RI,
       RS      => RS,
       WS      => WS,
