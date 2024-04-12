@@ -4,10 +4,12 @@ use ieee.numeric_std.all;
 
 entity program_counter is
   generic (
-    ADDR_WDTH : integer := 10);
+    ADDR_WDTH   : integer := 10;
+    OFFSET_WDTH : integer := 10);
   port (clock, resetn : in  std_logic;
         ST            : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
         SS            : in  std_logic;
+        offset        : in  std_logic_vector (OFFSET_WDTH - 1 downto 0);
         JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
         JS            : in  std_logic_vector (1 downto 0);
         EPC           : in  std_logic;
@@ -44,13 +46,14 @@ begin
 
   with SS select
     mux1_pc <= PC_X when '0',
-    ST              when others;
+    ST              when '1',
+    offset          when others;
 
   with JS select
-    mux2_pc <= JA_CA     when "00",
-    ST                   when "01",
+    mux2_pc <= JA_CA                                                    when "00",
+    ST                                                                  when "01",
     std_logic_vector(to_unsigned((2 ** ADDR_WDTH) - 1, mux2_pc'length)) when "10",
-    ADD_OUT              when others;
+    ADD_OUT                                                             when others;
 
 
   add_pc : my_addsub generic map(N => ADDR_WDTH)
