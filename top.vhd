@@ -6,25 +6,25 @@ use ieee.math_real.ceil;
 entity top is
   generic (
     -- Instruction Memory
-    IM_DIN_BITS   : integer;
-    IM_ADDR_BITS  : integer;
+    IM_DIN_BITS   : integer := 32;
+    IM_ADDR_BITS  : integer := 16;
     -- Data Memory
-    DI_WDTH       : integer;
-    DO_WDTH       : integer;
-    ADDR_WDTH     : integer;
+    DI_WDTH       : integer := 32;
+    DO_WDTH       : integer := 32;
+    ADDR_WDTH     : integer := 6;
     -- Stack
-    SP_WDTH       : integer;
-    DAT_WDTH      : integer;
+    SP_WDTH       : integer := 5;
+    DAT_WDTH      : integer := 16;
     -- Control
-    IR_BITS       : integer;
+    IR_BITS       : integer := 32;
     -- Datapath
-    FS_BITS       : integer;
-    DR_BITS       : integer;
-    SR_BITS       : integer;
-    MD_BITS       : integer;
-    PORT_ID_BITS  : integer;
-    OUT_PORT_BITS : integer;
-    IN_PORT_BITS  : integer);
+    FS_BITS       : integer := 5;
+    DR_BITS       : integer := 5;
+    SR_BITS       : integer := 5;
+    MD_BITS       : integer := 2;
+    PORT_ID_BITS  : integer := 32;
+    OUT_PORT_BITS : integer := 32;
+    IN_PORT_BITS  : integer := 32);
 
   port (
     -- Input signals
@@ -37,7 +37,7 @@ entity top is
     im_addrb                  : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
     -- Output signals
     IN_PORT                   : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
-    READ_STROBE, WRITE_STROBE : out std_logic;
+    --READ_STROBE, WRITE_STROBE : out std_logic;
     PORT_ID                   : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
     OUT_PORT                  : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
 end top;
@@ -77,8 +77,8 @@ architecture structural of top is
       N             : out std_logic;
       IE            : out std_logic;
       PORT_ID       : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-      READ_STROBE   : out std_logic;
-      WRITE_STROBE  : out std_logic;
+      --READ_STROBE   : out std_logic;
+      --WRITE_STROBE  : out std_logic;
       OUT_PORT      : out std_logic_vector (OUT_PORT_BITS - 1 downto 0);
       AO            : out std_logic_vector (5 downto 0);
       DO            : out std_logic_vector (31 downto 0));
@@ -112,34 +112,47 @@ architecture structural of top is
       SP                          : out std_logic_vector (SP_WDTH - 1 downto 0));
   end component stack;
 
-  component instruction_decoder is
+  component id_fsm is
     generic (
-      -- Control
-      IR_BITS : integer := 18;
-      -- Datapath
-      FS_BITS : integer := 5;
-      DR_BITS : integer := 4;
-      SR_BITS : integer := 4;
-      MD_BITS : integer := 2);
+      IR_BITS : integer;
+      FS_BITS : integer;
+      DR_BITS : integer;
+      SR_BITS : integer;
+      MD_BITS : integer);
     port (
-      IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-      clock, resetn, INT, Z, V, N, C,
-      IE, E_PC                                        : in  std_logic;
-      INT_ACK                                         : out std_logic;
-      -- Program Counter Signals
-      JS                                              : out std_logic_vector (1 downto 0);
-      EPC, SS                                         : out std_logic;
-      -- Datapath Signals
-      DR                                              : out std_logic_vector (DR_BITS - 1 downto 0);
-      SR                                              : out std_logic_vector (SR_BITS - 1 downto 0);
-      MD                                              : out std_logic_vector (MD_BITS - 1 downto 0);
-      fs                                              : out std_logic_vector (FS_BITS - 1 downto 0);
-      RW, MA, MA_sclr, SIE, LIE, INTP, RI, RS, WS, MB : out std_logic;
-      -- Data Memory Signals
-      DM_WE                                           : out std_logic;
-      -- Stack Signals
-      we, en, sclr                                    : out std_logic);
-  end component instruction_decoder;
+      IR      : in  std_logic_vector (IR_BITS - 1 downto 0);
+      clock   : in  std_logic;
+      resetn  : in  std_logic;
+      Z       : in  std_logic;
+      V       : in  std_logic;
+      N       : in  std_logic;
+      C       : in  std_logic;
+      --IE      : in  std_logic;
+      E_PC    : in  std_logic;
+      INT_P   : in  std_logic;
+      INT_ACK : out std_logic;
+      JS      : out std_logic_vector (1 downto 0);
+      EPC     : out std_logic;
+      SS      : out std_logic;
+      DR      : out std_logic_vector (DR_BITS - 1 downto 0);
+      SR      : out std_logic_vector (SR_BITS - 1 downto 0);
+      MD      : out std_logic_vector (MD_BITS - 1 downto 0);
+      fs      : out std_logic_vector (FS_BITS - 1 downto 0);
+      RW      : out std_logic;
+      MA      : out std_logic;
+      MA_sclr : out std_logic;
+      SIE     : out std_logic;
+      LIE     : out std_logic;
+      INTP    : out std_logic;
+      RI      : out std_logic;
+      RS      : out std_logic;
+      WS      : out std_logic;
+      MB      : out std_logic;
+      DM_WE   : out std_logic;
+      we      : out std_logic;
+      en      : out std_logic;
+      sclr    : out std_logic);
+  end component id_fsm;
 
   component program_counter is
     generic (
@@ -207,6 +220,7 @@ architecture structural of top is
 begin
   CI <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
   --PC_t <= "000000" & PC;
+  INTP <= '0';
 
   -- Datapath
   Datapath_1 : Datapath
@@ -244,8 +258,8 @@ begin
       N            => N,
       IE           => IE,
       PORT_ID      => PORT_ID,
-      READ_STROBE  => READ_STROBE,
-      WRITE_STROBE => WRITE_STROBE,
+      --READ_STROBE  => READ_STROBE,
+      --WRITE_STROBE => WRITE_STROBE,
       OUT_PORT     => OUT_PORT,
       AO           => DM_AO,
       DO           => DM_DI);
@@ -313,7 +327,7 @@ begin
       PC      => PC);
 
   -- Instruction Decoder
-  instruction_decoder_1 : instruction_decoder
+  id_fsm_1 : id_fsm
     generic map (
       IR_BITS => IR_BITS,
       FS_BITS => FS_BITS,
@@ -324,12 +338,11 @@ begin
       IR      => IR,
       clock   => clock,
       resetn  => resetn,
-      INT     => INT,
       Z       => Z,
       V       => V,
       N       => N,
       C       => C,
-      IE      => IE,
+      --IE      => IE,
       INT_ACK => INT_ACK,
       JS      => JS,
       EPC     => EPC,
@@ -344,7 +357,7 @@ begin
       MA_sclr => MA_sclr,
       SIE     => SIE,
       LIE     => LIE,
-      INTP    => INTP,
+      INT_P    => '0',
       RI      => RI,
       RS      => RS,
       WS      => WS,

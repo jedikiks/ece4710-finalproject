@@ -23,7 +23,7 @@ begin
       case y is
         when S1 =>
           if INT = '1' then
-            if IE <= '1' then
+            if IE = '1' then
               if intpulse_cnt = 2 then
                 intpulse_cnt <= 0;
                 y            <= S2;
@@ -31,14 +31,19 @@ begin
                 intpulse_cnt <= intpulse_cnt + 1;
                 y            <= S1;
               end if;
+            else
+              y <= S1;
             end if;
+          else
+            y <= S1;
           end if;
-        when S2 => y <= S1;
+        when S2 =>
+          y <= S1;
       end case;
     end if;
   end process;
 
-  outputs : process (y, INT)
+  outputs : process (y, INT, IE, intpulse_cnt)
   begin
     INT_P <= '0';
 

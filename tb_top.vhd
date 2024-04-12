@@ -53,7 +53,7 @@ architecture behavior of tb_top is
       im_dinb                   : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
       im_addrb                  : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
       IN_PORT                   : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
-      READ_STROBE, WRITE_STROBE : out std_logic;
+      --READ_STROBE, WRITE_STROBE : out std_logic;
       PORT_ID                   : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
       OUT_PORT                  : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
   end component top;
@@ -70,8 +70,8 @@ architecture behavior of tb_top is
   signal im_addrb     : std_logic_vector (IM_ADDR_BITS - 1 downto 0) := (others => '0');
   signal IN_PORT      : std_logic_vector (IN_PORT_BITS - 1 downto 0) := (others => '0');
   --Outputs
-  signal READ_STROBE  : std_logic;
-  signal WRITE_STROBE : std_logic;
+  --signal READ_STROBE  : std_logic;
+  --signal WRITE_STROBE : std_logic;
   signal PORT_ID      : std_logic_vector (PORT_ID_BITS - 1 downto 0);
   signal OUT_PORT     : std_logic_vector (OUT_PORT_BITS - 1 downto 0);
 
@@ -109,8 +109,8 @@ begin
       im_dinb      => im_dinb,
       im_addrb     => im_addrb,
       IN_PORT      => IN_PORT,
-      READ_STROBE  => READ_STROBE,
-      WRITE_STROBE => WRITE_STROBE,
+      --READ_STROBE  => READ_STROBE,
+      --WRITE_STROBE => WRITE_STROBE,
       PORT_ID      => PORT_ID,
       OUT_PORT     => OUT_PORT);
 

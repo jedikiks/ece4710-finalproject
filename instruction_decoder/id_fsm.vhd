@@ -14,7 +14,7 @@ entity id_fsm is
   port (
     IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
     clock, resetn, Z, V, N, C,
-    IE, E_PC, INT_P                                 : in  std_logic;
+    E_PC, INT_P                                 : in  std_logic;
     INT_ACK                                         : out std_logic;
     -- Program Counter Signals
     JS                                              : out std_logic_vector (1 downto 0);
@@ -64,7 +64,7 @@ begin
     end if;
   end process;
 
-  outputs : process (y, opcode, E_PC, Z, V, N, C)
+  outputs : process (y, opcode, E_PC, Z, V, N, C, IR, INT_P)
   begin
     INT_ACK <= '0';
     -- PC defaults

@@ -35,8 +35,8 @@ entity Datapath is
         N             : out std_logic;
         IE            : out std_logic;
         PORT_ID       : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-        READ_STROBE   : out std_logic;
-        WRITE_STROBE  : out std_logic;
+        --READ_STROBE   : out std_logic;
+        --WRITE_STROBE  : out std_logic;
         OUT_PORT      : out std_logic_vector (OUT_PORT_BITS - 1 downto 0);
         AO            : out std_logic_vector (5 downto 0);
         DO            : out std_logic_vector (31 downto 0));
