@@ -8,7 +8,7 @@ entity program_counter is
     OFFSET_WDTH : integer := 10);
   port (clock, resetn : in  std_logic;
         ST            : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
-        SS            : in  std_logic;
+        SS            : in  std_logic_vector (1 downto 0);
         offset        : in  std_logic_vector (OFFSET_WDTH - 1 downto 0);
         JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
         JS            : in  std_logic_vector (1 downto 0);
@@ -45,8 +45,8 @@ begin
   PC <= PC_X;
 
   with SS select
-    mux1_pc <= PC_X when '0',
-    ST              when '1',
+    mux1_pc <= PC_X when "00",
+    ST              when "01",
     offset          when others;
 
   with JS select
