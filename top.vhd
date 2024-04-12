@@ -133,7 +133,7 @@ architecture structural of top is
       E_PC    : in  std_logic;
       INT_P   : in  std_logic;
       INT_ACK : out std_logic;
-      JS      : out std_logic_vector (1 downto 0);
+      JS      : out std_logic_vector (2 downto 0);
       EPC     : out std_logic;
       SS      : out std_logic_vector (1 downto 0);
       DR      : out std_logic_vector (DR_BITS - 1 downto 0);
@@ -166,7 +166,7 @@ architecture structural of top is
       SS            : in  std_logic_vector (1 downto 0);
       offset        : in  std_logic_vector (OFFSET_WDTH - 1 downto 0);
       JA_CA         : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
-      JS            : in  std_logic_vector (1 downto 0);
+      JS            : in  std_logic_vector (2 downto 0);
       EPC           : in  std_logic;
       E_PC          : in  std_logic;
       sclr_PC       : in  std_logic;
@@ -189,7 +189,7 @@ architecture structural of top is
 -- PC
   signal IR     : std_logic_vector (IR_BITS - 1 downto 0);
   signal SS     : std_logic_vector (1 downto 0);
-  signal JS     : std_logic_vector (1 downto 0);
+  signal JS     : std_logic_vector (2 downto 0);
   signal EPC    : std_logic;
   signal PC     : std_logic_vector (IM_ADDR_BITS - 1 downto 0);
   signal offset : std_logic_vector (OFFSET_WDTH - 1 downto 0);
@@ -225,6 +225,7 @@ begin
   CI   <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
   --PC_t <= "000000" & PC;
   INTP <= '0';
+  offset <= IR(22 downto 16);
 
   -- Datapath
   Datapath_1 : Datapath

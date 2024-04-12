@@ -147,12 +147,38 @@ begin
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb  <= "000000" & "00001" & "000000000000000000010";  -- LOAD s0, #2
+    im_dinb <= "000000" & "00001" & "000000000000000000010";  -- LOAD s1, #2
+    wait for clock_period;
+
+    -- s16's a counter w/ value 4
+    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+    im_dinb <= "000000" & "10000" & "000000000000000000100";  -- LOAD s16, #4
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
     im_dinb  <= "011001" & "00000" & "00001" & x"0000";  -- ADD s0, s1
     wait for clock_period;
+
+    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+    im_dinb  <= "011100" & "10000" & "000000000000000000001";  -- SUBI s16, #1
+    wait for clock_period;
+
+    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+    im_dinb  <= "110011" & "000" & "1111110" & x"0000";  -- BR NZ, -2
+    wait for clock_period;
+
+    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+    im_dinb <= "000000" & "00100" & "000000000000000000010";  -- LOAD s4, #2
+    wait for clock_period;
+
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb  <= "110000" & x"100";      -- CALL $100
+   -- wait for clock_period;
+
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb  <= "101010" & "0000" & "0000" & "0000";  -- RETURN
+   -- wait for clock_period;
+
 
     --======================
     -- Finish loading
@@ -228,6 +254,14 @@ end;
 --  im_dinb <= "100000" & "0000" & "00000001";  -- RR s0
 --  wait for clock_period;
 
+-- 32 bit versions:
+-- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+-- im_dinb  <= "000000" & "00001" & "000000000000000000010";  -- LOAD s0, #2
+-- wait for clock_period;
+
+-- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+-- im_dinb  <= "011001" & "00000" & "00001" & x"0000";  -- ADD s0, s1
+-- wait for clock_period;
 --==================
 -- FAIL
 --==================

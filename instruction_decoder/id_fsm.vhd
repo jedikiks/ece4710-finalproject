@@ -14,11 +14,12 @@ entity id_fsm is
   port (
     IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
     clock, resetn, Z, V, N, C,
-    E_PC, INT_P                                 : in  std_logic;
+    E_PC, INT_P                                     : in  std_logic;
     INT_ACK                                         : out std_logic;
     -- Program Counter Signals
-    JS                                              : out std_logic_vector (1 downto 0);
-    EPC, SS                                         : out std_logic;
+    SS                                              : out std_logic_vector (1 downto 0);
+    JS                                              : out std_logic_vector (2 downto 0);
+    EPC                                             : out std_logic;
     -- Datapath Signals
     DR                                              : out std_logic_vector (DR_BITS - 1 downto 0);
     SR                                              : out std_logic_vector (SR_BITS - 1 downto 0);
@@ -68,8 +69,8 @@ begin
   begin
     INT_ACK <= '0';
     -- PC defaults
-    JS      <= "11";
-    SS      <= '0';
+    JS      <= "011";
+    SS      <= "00";
     EPC     <= '0';
     -- Datapath defaults
     DR      <= (others => '0');
@@ -112,7 +113,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011001" =>              -- ADD sX, sY
@@ -121,7 +122,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011011" =>              -- ADDCY sX, sY
@@ -130,7 +131,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011101" =>              -- SUB sX, sY
@@ -139,7 +140,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011111" =>              -- SUBCY sX, sY
@@ -148,7 +149,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "010101" =>              -- COMPARE sX, sY
@@ -156,7 +157,7 @@ begin
             SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "001011" =>              -- AND sX, sY
@@ -165,7 +166,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "001101" =>              -- OR sX, sY
@@ -174,7 +175,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "001111" =>              -- XOR sX, sY
@@ -183,7 +184,7 @@ begin
             DR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "010011" =>              -- TEST sX, sY
@@ -191,7 +192,7 @@ begin
             SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "000111" =>              -- FETCH sX, (sY)
@@ -201,7 +202,7 @@ begin
             RW  <= '1';
             MD  <= "10";
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "101111" =>              -- STORE sX, (sY)
@@ -209,7 +210,7 @@ begin
             SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "000101" =>              -- INPUT sX, (sY)
@@ -217,14 +218,14 @@ begin
             DR  <= IR(25 downto 21);
             MD  <= "01";
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "101101" =>              -- OUTPUT sX, (sY) FIXME: register bug
             SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           --===============================================
@@ -237,7 +238,7 @@ begin
             MA      <= '1';
             MB      <= '1';
             -- PC
-            JS      <= "11";
+            JS      <= "011";
             EPC     <= '1';
 
           when "011000" =>              -- ADD sX, kk
@@ -246,7 +247,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011010" =>              -- ADDCY sX, kk
@@ -255,7 +256,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011100" =>              -- SUB sX, kk
@@ -264,7 +265,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "011110" =>              -- SUBCY sX, kk
@@ -273,7 +274,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "010100" =>              -- COMPARE sX, kk
@@ -281,7 +282,7 @@ begin
             SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "001010" =>              -- AND sX, kk
@@ -290,7 +291,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "001100" =>              -- OR sX, kk
@@ -299,7 +300,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "001110" =>              -- XOR sX, kk
@@ -308,7 +309,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "010010" =>              -- TEST sX, kk
@@ -316,7 +317,7 @@ begin
             MA  <= '1';
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "000110" =>              -- FETCH sX, ss
@@ -326,7 +327,7 @@ begin
             MD  <= "10";
             RW  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "101110" =>              -- STORE sX, ss
@@ -334,7 +335,7 @@ begin
             SR  <= IR(25 downto 21);
             MA  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "000100" =>              -- INPUT sX, kk
@@ -343,7 +344,7 @@ begin
             RW  <= '1';
             MD  <= "01";
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           when "101100" =>              -- OUTPUT sX, kk
@@ -351,7 +352,7 @@ begin
             SR  <= IR(25 downto 21);
             MB  <= '1';
             -- PC
-            JS  <= "11";
+            JS  <= "011";
             EPC <= '1';
 
           --===============================================
@@ -365,7 +366,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000001" =>        -- RR sX
@@ -374,7 +375,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000010" =>        -- SL0 sX
@@ -383,7 +384,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000011" =>        -- SL1 sX
@@ -392,7 +393,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000100" =>        -- SLA sX
@@ -401,7 +402,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000101" =>        -- SLX sX
@@ -410,7 +411,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000110" =>        -- SR0 sX
@@ -419,7 +420,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000111" =>        -- SR1 sX
@@ -428,7 +429,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00001000" =>        -- SRA sX
@@ -437,7 +438,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00001001" =>        -- SRX sX
@@ -446,7 +447,7 @@ begin
                 SR  <= IR(25 downto 21);
                 MA  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when others =>
@@ -460,7 +461,7 @@ begin
             en  <= '1';
             we  <= '1';
             -- PC
-            JS  <= "00";
+            JS  <= "000";
             EPC <= '1';
 
           when "110001" =>              -- CALL extensions: with flags
@@ -471,11 +472,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -485,11 +486,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -499,11 +500,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -513,11 +514,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -527,11 +528,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -541,11 +542,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -555,11 +556,11 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -569,11 +570,117 @@ begin
                   en  <= '1';
                   we  <= '1';
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when others =>
+            end case;
+
+          when "110010" =>              -- BR offset
+            -- PC
+            JS  <= "100";
+            EPC <= '1';
+
+          when "110011" =>              -- BR extensions: with flags
+            case ir(25 downto 23) is
+              when "000" =>             -- BR Z, offset
+                if Z = '1' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "001" =>             -- BR NZ, offset
+                if Z = '0' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "010" =>             -- BR V, offset
+                if V = '1' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "011" =>             -- BR NV, offset
+                if V = '0' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "100" =>             -- BR N, offset
+                if N = '1' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "101" =>             -- BR NN, offset
+                if N = '0' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "110" =>             -- BR C, offset
+                if C = '1' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
+                  EPC <= '1';
+                end if;
+
+              when "111" =>             -- BR NC, offset
+                if C = '0' then
+                  -- PC
+                  JS <= "100";
+
+                  EPC <= '1';
+                else
+                  -- PC
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -582,7 +689,7 @@ begin
 
           when "110100" =>              -- JUMP aaa
             -- PC
-            JS  <= "00";
+            JS  <= "000";
             EPC <= '1';
 
           when "110101" =>              -- JUMP extensions: with flags
@@ -590,88 +697,88 @@ begin
               when "000" =>             -- JUMP Z, aaa
                 if Z = '1' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "001" =>             -- JUMP NZ, aaa
                 if Z = '0' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "010" =>             -- JUMP V, aaa
                 if V = '1' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "011" =>             -- JUMP NV, aaa
                 if V = '0' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "100" =>             -- JUMP N, aaa
                 if N = '1' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "101" =>             -- JUMP NN, aaa
                 if N = '0' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "110" =>             -- JUMP C, aaa
                 if C = '1' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "111" =>             -- JUMP NC, aaa
                 if C = '0' then
                   -- PC
-                  JS  <= "00";
+                  JS  <= "000";
                   EPC <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
@@ -683,8 +790,8 @@ begin
           --===============================================
           when "101010" =>              -- RETURN
             -- PC
-            SS  <= '1';
-            JS  <= "11";
+            SS  <= "01";
+            JS  <= "011";
             EPC <= '1';
             -- Stack
             en  <= '1';
@@ -694,112 +801,112 @@ begin
               when "00000000000000000000000000" =>  -- RETURN Z, aaa
                 if Z = '1' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000001" =>  -- RETURN NZ, aaa
                 if Z = '0' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000010" =>  -- RETURN V, aaa
                 if V = '1' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000011" =>  -- RETURN NV, aaa
                 if V = '0' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000100" =>  -- RETURN N, aaa
                 if N = '1' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000101" =>  -- RETURN NN, aaa
                 if N = '0' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000110" =>  -- RETURN C, aaa
                 if C = '1' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
 
               when "00000000000000000000000111" =>  -- RETURN NC, aaa
                 if C = '0' then
                   -- PC
-                  SS  <= '1';
-                  JS  <= "11";
+                  SS  <= "01";
+                  JS  <= "011";
                   EPC <= '1';
                   -- Stack
                   en  <= '1';
                 else
                   -- PC
-                  JS  <= "11";
+                  JS  <= "011";
                   EPC <= '1';
                 end if;
               when others =>
@@ -812,7 +919,7 @@ begin
                 SIE <= '0';
                 LIE <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
 
               when "00000000000000000000000001" =>  -- ENABLE INTERRUPT
@@ -820,7 +927,7 @@ begin
                 SIE <= '1';
                 LIE <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
               when others =>
             end case;
@@ -833,7 +940,7 @@ begin
                 LIE <= '1';
                 RI  <= '1';
                 -- PC
-                JS  <= "01";
+                JS  <= "001";
                 EPC <= '1';
                 -- Stack
                 en  <= '1';
@@ -844,7 +951,7 @@ begin
                 LIE <= '1';
                 RI  <= '1';
                 -- PC
-                JS  <= "11";
+                JS  <= "011";
                 EPC <= '1';
               when others =>
             end case;
@@ -859,7 +966,7 @@ begin
           en  <= '1';
           we  <= '1';
           -- PC
-          JS  <= "10";
+          JS  <= "010";
           EPC <= '1';
 
           -- Datapath
