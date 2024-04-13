@@ -12,24 +12,26 @@ entity id_fsm is
     SR_BITS : integer := 5;
     MD_BITS : integer := 2);
   port (
-    IR                                              : in  std_logic_vector (IR_BITS - 1 downto 0);
-    clock, resetn, Z, V, N, C,
-    E_PC, INT_P                                     : in  std_logic;
-    INT_ACK                                         : out std_logic;
+    IR                         : in  std_logic_vector (IR_BITS - 1 downto 0);
+    clock, resetn, E_PC, INT_P : in  std_logic;
+    INT_ACK                    : out std_logic;
     -- Program Counter Signals
-    SS                                              : out std_logic_vector (1 downto 0);
-    JS                                              : out std_logic_vector (2 downto 0);
-    EPC                                             : out std_logic;
+    SS                         : out std_logic_vector (1 downto 0);
+    JS                         : out std_logic_vector (2 downto 0);
+    EPC                        : out std_logic;
     -- Datapath Signals
-    DR                                              : out std_logic_vector (DR_BITS - 1 downto 0);
-    SR                                              : out std_logic_vector (SR_BITS - 1 downto 0);
-    MD                                              : out std_logic_vector (MD_BITS - 1 downto 0);
-    fs                                              : out std_logic_vector (FS_BITS - 1 downto 0);
-    RW, MA, MA_sclr, SIE, LIE, INTP, RI, RS, WS, MB : out std_logic;
+    Z, V, N, C                 : in  std_logic;
+    DR                         : out std_logic_vector (DR_BITS - 1 downto 0);
+    SR                         : out std_logic_vector (SR_BITS - 1 downto 0);
+    MD                         : out std_logic_vector (MD_BITS - 1 downto 0);
+    fs                         : out std_logic_vector (FS_BITS - 1 downto 0);
+    RW, MA, MA_sclr, SIE, LIE,
+    INTP, RI, RS, WS, MB, Z_en,
+    V_en, N_en, C_en           : out std_logic;
     -- Data Memory Signals
-    DM_WE                                           : out std_logic;
+    DM_WE                      : out std_logic;
     -- Stack Signals
-    we, en, sclr                                    : out std_logic);
+    we, en, sclr               : out std_logic);
 end id_fsm;
 
 architecture behavioral of id_fsm is
@@ -91,6 +93,10 @@ begin
     WE      <= '0';
     EN      <= '0';
     sclr    <= '0';
+    Z_en    <= '0';
+    C_en    <= '0';
+    V_en    <= '0';
+    N_en    <= '0';
 
     case y is
       when S1 =>                        -- Initializers
@@ -98,10 +104,18 @@ begin
           -- Start stack at 31
           sclr <= '1';
           en   <= '1';
+
+          -- Clear flags
+          Z_en    <= '0';
+          C_en    <= '0';
+          V_en    <= '0';
+          N_en    <= '0';
+
           -- Disable interrupts
           SIE  <= '0';
           LIE  <= '1';
         end if;
+
       when S2 =>  -- First half of instructions. PC also gets updated here
         case opcode is
           --===============================================
@@ -960,6 +974,11 @@ begin
         end case;
 
       when S3 =>  -- Second half of instructions (if needed)
+        Z_en    <= '1';
+        C_en    <= '1';
+        V_en    <= '1';
+        N_en    <= '1';
+
         if INT_P = '1' then
           -- CALL 0x3FF:
           -- Stack
@@ -1219,10 +1238,13 @@ begin
 
               when others =>
             end case;
+
           when others =>
         end case;
+
       when S4 =>
         INT_ACK <= '1';
+
     end case;
   end process;
 end behavioral;

@@ -7,10 +7,14 @@ entity my_alu is
   port (clock, resetn : in  std_logic;
         A, B          : in  std_logic_vector (N-1 downto 0);
         sel           : in  std_logic_vector (4 downto 0);
+        Z_en          : in  std_logic;
+        C_en          : in  std_logic;
+        V_en          : in  std_logic;
+        N_en          : in  std_logic;
         zflag         : out std_logic;
-        cflag         : out std_logic;
         vflag         : out std_logic;
         nflag         : out std_logic;
+        cflag         : out std_logic;
         y             : out std_logic_vector (N-1 downto 0));
 end my_alu;
 
@@ -191,14 +195,14 @@ begin
   c16 <= A(7);
   c17 <= A(0);
 
-  fcout : FlipFlop port map (d => y_cout, clrn => '1', prn => '1', clk => clock, ena => '1', sclr => '0', q => cflag);
+  fcout : FlipFlop port map (d => y_cout, clrn => '1', prn => '1', clk => clock, ena => C_en, sclr => '0', q => cflag);
 
-  foverflow : FlipFlop port map (d => y_overflow, clrn => '1', prn => '1', clk => clock, ena => '1', sclr => '0',
+  foverflow : FlipFlop port map (d => y_overflow, clrn => '1', prn => '1', clk => clock, ena => V_en, sclr => '0',
                                  q => vflag);
 
-  fzero : FlipFlop port map (d => y_zero, clrn => '1', prn => '1', clk => clock, ena => '1', sclr => '0', q => zflag);
+  fzero : FlipFlop port map (d => y_zero, clrn => '1', prn => '1', clk => clock, ena => Z_en, sclr => '0', q => zflag);
 
-  fnegative : FlipFlop port map (d => y_negative, clrn => '1', prn => '1', clk => clock, ena => '1', sclr => '0',
+  fnegative : FlipFlop port map (d => y_negative, clrn => '1', prn => '1', clk => clock, ena => N_en, sclr => '0',
                                  q => nflag);
 
 -- Multiplexor

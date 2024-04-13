@@ -29,6 +29,10 @@ entity Datapath is
         WS            : in  std_logic;
         IN_PORT       : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
         SR            : in  std_logic_vector (SR_BITS - 1 downto 0);
+        Z_en          : in  std_logic;
+        C_en          : in  std_logic;
+        V_en          : in  std_logic;
+        N_en          : in  std_logic;
         Z             : out std_logic;
         C             : out std_logic;
         V             : out std_logic;
@@ -60,6 +64,10 @@ architecture struct of Datapath is
     port (clock, resetn : in  std_logic;
           A, B          : in  std_logic_vector (N-1 downto 0);
           sel           : in  std_logic_vector (4 downto 0);
+          Z_en          : in  std_logic;
+          C_en          : in  std_logic;
+          V_en          : in  std_logic;
+          N_en          : in  std_logic;
           zflag         : out std_logic;
           cflag         : out std_logic;
           vflag         : out std_logic;
@@ -89,7 +97,6 @@ architecture struct of Datapath is
   type dim_2 is array ((2 ** DR_BITS) - 1 downto 0) of std_logic_vector(31 downto 0);
   signal regfile_reg : dim_2;
 
-  --signal alu_out_t : std_logic_vector (7 downto 0);
   signal regfile_output_bus, regfile_input_bus,
     alu_out, mux_out, ma_reg_Q : std_logic_vector(31 downto 0);
   signal E : std_logic_vector (31 downto 0);
@@ -97,28 +104,10 @@ architecture struct of Datapath is
 
 begin
 
-  ieflag : FlipFlop port map (d   => SIE, clrn => '1', prn => '1',
-                              clk => clock, ena => LIE, sclr => '0', q => IE);
-
-  --alu_out  <= x"000000" & alu_out_t;
   DO       <= ma_reg_Q;
   OUT_PORT <= regfile_output_bus;
   PORT_ID  <= mux_out;
   AO       <= mux_out(5 downto 0);
-
-  alu : my_alu generic map(N => 32)
-    port map(clock => clock, resetn => resetn, A => ma_reg_Q, B => mux_out, sel => fs, zflag => Z,
-             cflag => C, vflag => V, nflag => N, y => alu_out);
-
-  gen_decoder_1 : gen_decoder
-    generic map (
-      NI => DR_BITS,
-      NO => 2 ** DR_BITS,
-      EN => true)
-    port map (
-      input  => DR,
-      e      => RW,
-      output => E);
 
   with MB select
     mux_out <= regfile_output_bus when '0',
@@ -131,6 +120,35 @@ begin
 
   -- Output register multiplexor
   regfile_output_bus <= regfile_reg(to_integer(unsigned(SR)));
+
+  regfile_reg_sel : gen_decoder
+    generic map (
+      NI => DR_BITS,
+      NO => 2 ** DR_BITS,
+      EN => true)
+    port map (
+      input  => DR,
+      e      => RW,
+      output => E);
+
+  alu : my_alu generic map(N => 32)
+    port map(clock  => clock,
+             resetn => resetn,
+             A      => ma_reg_Q,
+             B      => mux_out,
+             sel    => fs,
+             Z_en   => Z_en,
+             C_en   => C_en,
+             V_en   => V_en,
+             N_en   => N_en,
+             zflag  => Z,
+             cflag => C,
+             vflag => V,
+             nflag => N,
+             y     => alu_out);
+
+  ieflag : FlipFlop port map (d   => SIE, clrn => '1', prn => '1',
+                              clk => clock, ena => LIE, sclr => '0', q => IE);
 
   regfile_gen : for i in 0 to (2 ** DR_BITS) - 1 generate
     reg_i : my_rege generic map (N => 32)

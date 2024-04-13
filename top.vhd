@@ -73,6 +73,10 @@ architecture structural of top is
       WS            : in  std_logic;
       IN_PORT       : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
       SR            : in  std_logic_vector (SR_BITS - 1 downto 0);
+      Z_en          : in  std_logic;
+      C_en          : in  std_logic;
+      V_en          : in  std_logic;
+      N_en          : in  std_logic;
       Z             : out std_logic;
       C             : out std_logic;
       V             : out std_logic;
@@ -125,17 +129,16 @@ architecture structural of top is
       IR      : in  std_logic_vector (IR_BITS - 1 downto 0);
       clock   : in  std_logic;
       resetn  : in  std_logic;
+      E_PC    : in  std_logic;
+      INT_P   : in  std_logic;
+      INT_ACK : out std_logic;
+      SS      : out std_logic_vector (1 downto 0);
+      JS      : out std_logic_vector (2 downto 0);
+      EPC     : out std_logic;
       Z       : in  std_logic;
       V       : in  std_logic;
       N       : in  std_logic;
       C       : in  std_logic;
-      --IE      : in  std_logic;
-      E_PC    : in  std_logic;
-      INT_P   : in  std_logic;
-      INT_ACK : out std_logic;
-      JS      : out std_logic_vector (2 downto 0);
-      EPC     : out std_logic;
-      SS      : out std_logic_vector (1 downto 0);
       DR      : out std_logic_vector (DR_BITS - 1 downto 0);
       SR      : out std_logic_vector (SR_BITS - 1 downto 0);
       MD      : out std_logic_vector (MD_BITS - 1 downto 0);
@@ -150,6 +153,10 @@ architecture structural of top is
       RS      : out std_logic;
       WS      : out std_logic;
       MB      : out std_logic;
+      Z_en    : out std_logic;
+      V_en    : out std_logic;
+      N_en    : out std_logic;
+      C_en    : out std_logic;
       DM_WE   : out std_logic;
       we      : out std_logic;
       en      : out std_logic;
@@ -218,13 +225,13 @@ architecture structural of top is
 -- Instruction Memory
 
 -- Datapath
-  signal Z, V, N, C, IE : std_logic;
-  signal CI             : std_logic_vector (31 downto 0);
+  signal Z, V, N, C, Z_en, V_en, N_en, C_en, IE : std_logic;
+  signal CI                                     : std_logic_vector (31 downto 0);
 
 begin
-  CI   <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
+  CI     <= "00000000000" & IR(20 downto 0);  -- Datapath CI is a 32 bit sig
   --PC_t <= "000000" & PC;
-  INTP <= '0';
+  INTP   <= '0';
   offset <= IR(22 downto 16);
 
   -- Datapath
@@ -257,6 +264,10 @@ begin
       WS       => WS,
       IN_PORT  => IN_PORT,
       SR       => SR,
+      Z_en     => Z_en,
+      C_en     => C_en,
+      V_en     => V_en,
+      N_en     => N_en,
       Z        => Z,
       C        => C,
       V        => V,
@@ -345,6 +356,10 @@ begin
       IR      => IR,
       clock   => clock,
       resetn  => resetn,
+      Z_en    => Z_en,
+      C_en    => C_en,
+      V_en    => V_en,
+      N_en    => N_en,
       Z       => Z,
       V       => V,
       N       => N,
