@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="337890000fs"></ZoomStartTime>
-      <ZoomEndTime time="555590001fs"></ZoomEndTime>
-      <Cursor1Time time="415100000fs"></Cursor1Time>
+      <ZoomStartTime time="220010000fs"></ZoomStartTime>
+      <ZoomEndTime time="438611243fs"></ZoomEndTime>
+      <Cursor1Time time="279292000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="217"></NameColumnWidth>
-      <ValueColumnWidth column_width="131"></ValueColumnWidth>
+      <ValueColumnWidth column_width="125"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="8" />
    <wvobject type="logic" fp_name="/tb_top/clock">
@@ -205,7 +205,6 @@
    <wvobject type="group" fp_name="group64">
       <obj_property name="label">Instruction mem</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb_top/clock">
          <obj_property name="ElementShortName">clock</obj_property>
          <obj_property name="ObjectShortName">clock</obj_property>
@@ -540,6 +539,134 @@
             <obj_property name="ObjectShortName">[0][31:0]</obj_property>
             <obj_property name="CustomSignalColor">#FFD700</obj_property>
             <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[31]">
+            <obj_property name="ElementShortName">[31][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[31][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[30]">
+            <obj_property name="ElementShortName">[30][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[30][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[29]">
+            <obj_property name="ElementShortName">[29][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[29][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[28]">
+            <obj_property name="ElementShortName">[28][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[28][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[27]">
+            <obj_property name="ElementShortName">[27][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[27][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[26]">
+            <obj_property name="ElementShortName">[26][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[26][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[25]">
+            <obj_property name="ElementShortName">[25][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[25][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[24]">
+            <obj_property name="ElementShortName">[24][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[24][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[23]">
+            <obj_property name="ElementShortName">[23][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[23][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[22]">
+            <obj_property name="ElementShortName">[22][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[22][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[21]">
+            <obj_property name="ElementShortName">[21][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[21][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[20]">
+            <obj_property name="ElementShortName">[20][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[20][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[19]">
+            <obj_property name="ElementShortName">[19][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[19][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[18]">
+            <obj_property name="ElementShortName">[18][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[18][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[17]">
+            <obj_property name="ElementShortName">[17][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[17][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[16]">
+            <obj_property name="ElementShortName">[16][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[16][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[15]">
+            <obj_property name="ElementShortName">[15][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[15][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[14]">
+            <obj_property name="ElementShortName">[14][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[14][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[13]">
+            <obj_property name="ElementShortName">[13][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[13][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[12]">
+            <obj_property name="ElementShortName">[12][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[12][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[11]">
+            <obj_property name="ElementShortName">[11][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[11][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[10]">
+            <obj_property name="ElementShortName">[10][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[10][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[9]">
+            <obj_property name="ElementShortName">[9][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[9][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[8]">
+            <obj_property name="ElementShortName">[8][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[8][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[7]">
+            <obj_property name="ElementShortName">[7][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[7][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[6]">
+            <obj_property name="ElementShortName">[6][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[5]">
+            <obj_property name="ElementShortName">[5][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[4]">
+            <obj_property name="ElementShortName">[4][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[3]">
+            <obj_property name="ElementShortName">[3][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[2]">
+            <obj_property name="ElementShortName">[2][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[1]">
+            <obj_property name="ElementShortName">[1][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/regfile_reg[0]">
+            <obj_property name="ElementShortName">[0][31:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][31:0]</obj_property>
          </wvobject>
       </wvobject>
       <wvobject type="array" fp_name="/tb_top/top_1/Datapath_1/CI">

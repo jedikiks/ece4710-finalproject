@@ -106,10 +106,10 @@ begin
           en   <= '1';
 
           -- Clear flags
-          Z_en    <= '0';
-          C_en    <= '0';
-          V_en    <= '0';
-          N_en    <= '0';
+          Z_en    <= '1';
+          C_en    <= '1';
+          V_en    <= '1';
+          N_en    <= '1';
 
           -- Disable interrupts
           SIE  <= '0';
@@ -974,6 +974,7 @@ begin
         end case;
 
       when S3 =>  -- Second half of instructions (if needed)
+        -- Set flags
         Z_en    <= '1';
         C_en    <= '1';
         V_en    <= '1';

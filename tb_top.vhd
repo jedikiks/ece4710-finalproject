@@ -164,7 +164,7 @@ begin
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb  <= "110011" & "000" & "1111110" & x"0000";  -- BR NZ, -2
+    im_dinb  <= "110011" & "001" & "1111110" & x"0000";  -- BR NZ, -2
     wait for clock_period;
 
     im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
