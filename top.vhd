@@ -5,7 +5,7 @@ use ieee.std_logic_unsigned.all;
 entity top is
   generic (
     -- MMCM
-    O_0          : integer := 2;
+    O_0          : integer := 3;
     O_1          : integer := 2;
     O_2          : integer := 4;
     -- Instruction Memory
@@ -126,9 +126,9 @@ begin
       MD_BITS      => MD_BITS,
       OFFSET_WDTH  => OFFSET_WDTH)
     port map (
-      clock   => clock,
+      clock   => clk_50mhz,
       resetn  => resetn,
-      E_PC    => pulse_det_out,
+      E_PC    => '1',
       sclr_PC => '0',
       DM_DO   => DM_DO);
 
