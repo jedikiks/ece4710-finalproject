@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity tb_top is
+entity tb_microprocessor_32 is
   generic (
     -- Instruction Memory
     IM_DIN_BITS   : integer := 32;
@@ -23,12 +23,12 @@ entity tb_top is
     MD_BITS       : integer := 2;
     -- Program Counter
     OFFSET_WDTH   : integer := 7);
-end tb_top;
+end tb_microprocessor_32;
 
-architecture behavior of tb_top is
+architecture behavior of tb_microprocessor_32 is
 
   -- Component Declaration for the Unit Under Test (UUT)
-  component top is
+  component microprocessor_32 is
     generic (
       IM_DIN_BITS   : integer;
       IM_ADDR_BITS  : integer;
@@ -47,7 +47,7 @@ architecture behavior of tb_top is
       clock, resetn, INT : in  std_logic;
       E_PC, sclr_PC      : in  std_logic;
       DM_DO : out std_logic_vector (15 downto 0));
-  end component top;
+  end component microprocessor_32;
 
   --Inputs
   signal clock    : std_logic                                    := '0';
@@ -64,7 +64,7 @@ architecture behavior of tb_top is
 begin
 
   -- Instantiate the Unit Under Test (UUT)
-  top_1 : top
+  microprocessor_32_1 : microprocessor_32
     generic map (
       IM_DIN_BITS   => IM_DIN_BITS,
       IM_ADDR_BITS  => IM_ADDR_BITS,

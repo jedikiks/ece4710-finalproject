@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.math_real.log2;
 use ieee.math_real.ceil;
 
-entity top is
+entity microprocessor_32 is
   generic (
     -- Instruction Memory
     IM_DIN_BITS   : integer := 32;
@@ -32,9 +32,9 @@ entity top is
     E_PC, sclr_PC      : in  std_logic;
     -- Output signals
     DM_DO : out std_logic_vector (15 downto 0));
-end top;
+end microprocessor_32;
 
-architecture structural of top is
+architecture structural of microprocessor_32 is
   component Datapath is
     generic (
       FS_BITS       : integer;
