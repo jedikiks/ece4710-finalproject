@@ -4,13 +4,10 @@ use ieee.numeric_std.all;
 
 entity Datapath is
   generic (
-    PORT_ID_BITS  : integer := 32;
-    OUT_PORT_BITS : integer := 32;
-    IN_PORT_BITS  : integer := 32;
-    FS_BITS       : integer := 5;
-    DR_BITS       : integer := 4;
-    SR_BITS       : integer := 4;
-    MD_BITS       : integer := 2);
+    FS_BITS : integer := 5;
+    DR_BITS : integer := 4;
+    SR_BITS : integer := 4;
+    MD_BITS : integer := 2);
   port (clock, resetn : in  std_logic;
         DR            : in  std_logic_vector (DR_BITS - 1 downto 0);
         CI            : in  std_logic_vector (31 downto 0);
@@ -27,7 +24,6 @@ entity Datapath is
         RI            : in  std_logic;
         RS            : in  std_logic;
         WS            : in  std_logic;
-        IN_PORT       : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
         SR            : in  std_logic_vector (SR_BITS - 1 downto 0);
         Z_en          : in  std_logic;
         C_en          : in  std_logic;
@@ -38,10 +34,6 @@ entity Datapath is
         V             : out std_logic;
         N             : out std_logic;
         IE            : out std_logic;
-        PORT_ID       : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-        --READ_STROBE   : out std_logic;
-        --WRITE_STROBE  : out std_logic;
-        OUT_PORT      : out std_logic_vector (OUT_PORT_BITS - 1 downto 0);
         AO            : out std_logic_vector (5 downto 0);
         DO            : out std_logic_vector (31 downto 0));
 end Datapath;
@@ -104,10 +96,8 @@ architecture struct of Datapath is
 
 begin
 
-  DO       <= ma_reg_Q;
-  OUT_PORT <= regfile_output_bus;
-  PORT_ID  <= mux_out;
-  AO       <= mux_out(5 downto 0);
+  DO <= ma_reg_Q;
+  AO <= mux_out(5 downto 0);
 
   with MB select
     mux_out <= regfile_output_bus when '0',
@@ -115,8 +105,8 @@ begin
 
   with MD select
     regfile_input_bus <= alu_out when "00",
-    IN_PORT                      when "01",
-    DI                           when others;
+    DI                           when "10",
+    (others => '-')              when others;
 
   -- Output register multiplexor
   regfile_output_bus <= regfile_reg(to_integer(unsigned(SR)));
@@ -142,10 +132,10 @@ begin
              V_en   => V_en,
              N_en   => N_en,
              zflag  => Z,
-             cflag => C,
-             vflag => V,
-             nflag => N,
-             y     => alu_out);
+             cflag  => C,
+             vflag  => V,
+             nflag  => N,
+             y      => alu_out);
 
   ieflag : FlipFlop port map (d   => SIE, clrn => '1', prn => '1',
                               clk => clock, ena => LIE, sclr => '0', q => IE);

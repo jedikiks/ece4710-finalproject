@@ -22,9 +22,6 @@ entity top is
     DR_BITS       : integer := 5;
     SR_BITS       : integer := 5;
     MD_BITS       : integer := 2;
-    PORT_ID_BITS  : integer := 32;
-    OUT_PORT_BITS : integer := 32;
-    IN_PORT_BITS  : integer := 32;
     -- Program Counter
     OFFSET_WDTH   : integer := 7);
 
@@ -33,24 +30,13 @@ entity top is
     clock, resetn, INT : in  std_logic;
     -- PC signals
     E_PC, sclr_PC      : in  std_logic;
-    -- IM signals
-   -- im_enb, im_web     : in  std_logic;
-   -- im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
-   -- im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
     -- Output signals
-    DM_DO : out std_logic_vector (DO_WDTH - 1 downto 0);
-    IN_PORT            : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
-    --READ_STROBE, WRITE_STROBE : out std_logic;
-    PORT_ID            : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-    OUT_PORT           : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
+    DM_DO : out std_logic_vector (15 downto 0));
 end top;
 
 architecture structural of top is
   component Datapath is
     generic (
-      PORT_ID_BITS  : integer;
-      OUT_PORT_BITS : integer;
-      IN_PORT_BITS  : integer;
       FS_BITS       : integer;
       DR_BITS       : integer;
       SR_BITS       : integer;
@@ -72,7 +58,6 @@ architecture structural of top is
       RI            : in  std_logic;
       RS            : in  std_logic;
       WS            : in  std_logic;
-      IN_PORT       : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
       SR            : in  std_logic_vector (SR_BITS - 1 downto 0);
       Z_en          : in  std_logic;
       C_en          : in  std_logic;
@@ -83,10 +68,6 @@ architecture structural of top is
       V             : out std_logic;
       N             : out std_logic;
       IE            : out std_logic;
-      PORT_ID       : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-      --READ_STROBE   : out std_logic;
-      --WRITE_STROBE  : out std_logic;
-      OUT_PORT      : out std_logic_vector (OUT_PORT_BITS - 1 downto 0);
       AO            : out std_logic_vector (5 downto 0);
       DO            : out std_logic_vector (31 downto 0));
   end component Datapath;
@@ -226,14 +207,11 @@ begin
   --PC_t <= "000000" & PC;
   INTP   <= '0';
   offset <= IR(22 downto 16);
-  DM_DO <= DM_DO_t;
+  DM_DO <= DM_DO_t(15 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
     generic map (
-      PORT_ID_BITS  => PORT_ID_BITS,
-      OUT_PORT_BITS => OUT_PORT_BITS,
-      IN_PORT_BITS  => IN_PORT_BITS,
       FS_BITS       => FS_BITS,
       DR_BITS       => DR_BITS,
       SR_BITS       => SR_BITS,
@@ -256,7 +234,6 @@ begin
       RI       => RI,
       RS       => RS,
       WS       => WS,
-      IN_PORT  => IN_PORT,
       SR       => SR,
       Z_en     => Z_en,
       C_en     => C_en,
@@ -267,10 +244,6 @@ begin
       V        => V,
       N        => N,
       IE       => IE,
-      PORT_ID  => PORT_ID,
-      --READ_STROBE  => READ_STROBE,
-      --WRITE_STROBE => WRITE_STROBE,
-      OUT_PORT => OUT_PORT,
       AO       => DM_AO,
       DO       => DM_DI);
 

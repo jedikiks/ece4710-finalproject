@@ -21,9 +21,6 @@ entity tb_top is
     DR_BITS       : integer := 5;
     SR_BITS       : integer := 5;
     MD_BITS       : integer := 2;
-    PORT_ID_BITS  : integer := 32;
-    OUT_PORT_BITS : integer := 32;
-    IN_PORT_BITS  : integer := 32;
     -- Program Counter
     OFFSET_WDTH   : integer := 7);
 end tb_top;
@@ -45,20 +42,11 @@ architecture behavior of tb_top is
       DR_BITS       : integer;
       SR_BITS       : integer;
       MD_BITS       : integer;
-      PORT_ID_BITS  : integer;
-      OUT_PORT_BITS : integer;
-      IN_PORT_BITS  : integer;
       OFFSET_WDTH   : integer);
     port (
       clock, resetn, INT : in  std_logic;
       E_PC, sclr_PC      : in  std_logic;
-     -- im_enb, im_web     : in  std_logic;
-     -- im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
-     -- im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
-      IN_PORT            : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
-      DM_DO : out std_logic_vector (DO_WDTH - 1 downto 0);
-      PORT_ID            : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
-      OUT_PORT           : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
+      DM_DO : out std_logic_vector (15 downto 0));
   end component top;
 
   --Inputs
@@ -67,17 +55,8 @@ architecture behavior of tb_top is
   signal INT      : std_logic                                    := '0';
   signal E_PC     : std_logic                                    := '1';
   signal sclr_PC  : std_logic                                    := '0';
-  signal im_enb   : std_logic                                    := '0';
-  signal im_web   : std_logic                                    := '0';
-  signal im_dinb  : std_logic_vector (IM_DIN_BITS - 1 downto 0)  := (others => '0');
-  signal im_addrb : std_logic_vector (IM_ADDR_BITS - 1 downto 0) := (others => '0');
-  signal IN_PORT  : std_logic_vector (IN_PORT_BITS - 1 downto 0) := (others => '0');
-  signal DM_DO :  std_logic_vector (DO_WDTH - 1 downto 0);
   --Outputs
-  --signal READ_STROBE  : std_logic;
-  --signal WRITE_STROBE : std_logic;
-  signal PORT_ID  : std_logic_vector (PORT_ID_BITS - 1 downto 0);
-  signal OUT_PORT : std_logic_vector (OUT_PORT_BITS - 1 downto 0);
+  signal DM_DO :  std_logic_vector (15 downto 0);
 
   -- Clock period definitions
   constant clock_period : time := 10 ns;
@@ -99,9 +78,6 @@ begin
       DR_BITS       => DR_BITS,
       SR_BITS       => SR_BITS,
       MD_BITS       => MD_BITS,
-      PORT_ID_BITS  => PORT_ID_BITS,
-      OUT_PORT_BITS => OUT_PORT_BITS,
-      IN_PORT_BITS  => IN_PORT_BITS,
       OFFSET_WDTH   => OFFSET_WDTH)
     port map (
       clock    => clock,
@@ -109,16 +85,7 @@ begin
       INT      => INT,
       E_PC     => E_PC,
       sclr_PC  => sclr_PC,
-     -- im_enb   => im_enb,
-     -- im_web   => im_web,
-     -- im_dinb  => im_dinb,
-     -- im_addrb => im_addrb,
-      IN_PORT  => IN_PORT,
-      DM_DO => DM_DO,
-      --READ_STROBE  => READ_STROBE,
-      --WRITE_STROBE => WRITE_STROBE,
-      PORT_ID  => PORT_ID,
-      OUT_PORT => OUT_PORT);
+      DM_DO => DM_DO);
 
   -- Clock process definitions
   clock_process : process
