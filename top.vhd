@@ -34,10 +34,11 @@ entity top is
     -- PC signals
     E_PC, sclr_PC      : in  std_logic;
     -- IM signals
-    im_enb, im_web     : in  std_logic;
-    im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
-    im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+   -- im_enb, im_web     : in  std_logic;
+   -- im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
+   -- im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
     -- Output signals
+    DM_DO : out std_logic_vector (DO_WDTH - 1 downto 0);
     IN_PORT            : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
     --READ_STROBE, WRITE_STROBE : out std_logic;
     PORT_ID            : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
@@ -93,18 +94,10 @@ architecture structural of top is
   component instr_mem is
     port (
       clka  : in  std_logic;
-      ena   : in  std_logic;
       wea   : in  std_logic_vector(0 downto 0);
       addra : in  std_logic_vector(9 downto 0);
       dina  : in  std_logic_vector(31 downto 0);
-      douta : out std_logic_vector(31 downto 0);
-      clkb  : in  std_logic;
-      enb   : in  std_logic;
-      web   : in  std_logic_vector(0 downto 0);
-      addrb : in  std_logic_vector(9 downto 0);
-      dinb  : in  std_logic_vector(31 downto 0);
-      doutb : out std_logic_vector(31 downto 0)
-      );
+      douta : out std_logic_vector(31 downto 0));
   end component instr_mem;
 
   component stack is
@@ -220,7 +213,7 @@ architecture structural of top is
 -- Data Memory
   signal DM_AO : std_logic_vector (ADDR_WDTH - 1 downto 0);
   signal DM_DI : std_logic_vector (DI_WDTH - 1 downto 0);
-  signal DM_DO : std_logic_vector (DO_WDTH - 1 downto 0);
+  signal DM_DO_t : std_logic_vector (DO_WDTH - 1 downto 0);
 
 -- Instruction Memory
 
@@ -233,6 +226,7 @@ begin
   --PC_t <= "000000" & PC;
   INTP   <= '0';
   offset <= IR(22 downto 16);
+  DM_DO <= DM_DO_t;
 
   -- Datapath
   Datapath_1 : Datapath
@@ -249,7 +243,7 @@ begin
       resetn   => resetn,
       DR       => DR,
       CI       => CI,
-      DI       => DM_DO,
+      DI       => DM_DO_t,
       MD       => MD,
       fs       => fs,
       MB       => MB,
@@ -294,23 +288,16 @@ begin
       en      => '1',
       di      => DM_DI,
       address => DM_AO,
-      do      => DM_DO);
+      do      => DM_DO_t);
 
   -- Instruction memory
   instr_mem_1 : instr_mem
     port map (
-      clka   => clock,
-      ena    => '1',
-      wea(0) => '0',
-      addra  => PC(9 downto 0),
-      dina   => (others => '0'),
-      douta  => IR,
-      clkb   => clock,
-      enb    => im_enb,
-      web(0) => im_web,
-      addrb  => im_addrb(9 downto 0),
-      dinb   => im_dinb);
-  --doutb => im_doutb);
+      clka  => clock,
+      wea   => "0",
+      addra => PC(9 downto 0),
+      dina  => (others => '0'),
+      douta => IR);
 
   -- Stack
   stack_1 : stack

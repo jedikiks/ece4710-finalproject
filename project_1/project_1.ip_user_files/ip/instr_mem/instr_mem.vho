@@ -55,17 +55,10 @@
 COMPONENT instr_mem
   PORT (
     clka : IN STD_LOGIC;
-    ena : IN STD_LOGIC;
     wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
     addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
     dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-    clkb : IN STD_LOGIC;
-    enb : IN STD_LOGIC;
-    web : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-    addrb : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
-    dinb : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    doutb : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -77,17 +70,10 @@ END COMPONENT;
 your_instance_name : instr_mem
   PORT MAP (
     clka => clka,
-    ena => ena,
     wea => wea,
     addra => addra,
     dina => dina,
-    douta => douta,
-    clkb => clkb,
-    enb => enb,
-    web => web,
-    addrb => addrb,
-    dinb => dinb,
-    doutb => doutb
+    douta => douta
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ---------
 

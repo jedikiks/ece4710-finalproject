@@ -52,10 +52,11 @@ architecture behavior of tb_top is
     port (
       clock, resetn, INT : in  std_logic;
       E_PC, sclr_PC      : in  std_logic;
-      im_enb, im_web     : in  std_logic;
-      im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
-      im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
+     -- im_enb, im_web     : in  std_logic;
+     -- im_dinb            : in  std_logic_vector (IM_DIN_BITS - 1 downto 0);
+     -- im_addrb           : in  std_logic_vector (IM_ADDR_BITS - 1 downto 0);
       IN_PORT            : in  std_logic_vector (IN_PORT_BITS - 1 downto 0);
+      DM_DO : out std_logic_vector (DO_WDTH - 1 downto 0);
       PORT_ID            : out std_logic_vector (PORT_ID_BITS - 1 downto 0);
       OUT_PORT           : out std_logic_vector (OUT_PORT_BITS - 1 downto 0));
   end component top;
@@ -64,13 +65,14 @@ architecture behavior of tb_top is
   signal clock    : std_logic                                    := '0';
   signal resetn   : std_logic                                    := '0';
   signal INT      : std_logic                                    := '0';
-  signal E_PC     : std_logic                                    := '0';
+  signal E_PC     : std_logic                                    := '1';
   signal sclr_PC  : std_logic                                    := '0';
   signal im_enb   : std_logic                                    := '0';
   signal im_web   : std_logic                                    := '0';
   signal im_dinb  : std_logic_vector (IM_DIN_BITS - 1 downto 0)  := (others => '0');
   signal im_addrb : std_logic_vector (IM_ADDR_BITS - 1 downto 0) := (others => '0');
   signal IN_PORT  : std_logic_vector (IN_PORT_BITS - 1 downto 0) := (others => '0');
+  signal DM_DO :  std_logic_vector (DO_WDTH - 1 downto 0);
   --Outputs
   --signal READ_STROBE  : std_logic;
   --signal WRITE_STROBE : std_logic;
@@ -107,11 +109,12 @@ begin
       INT      => INT,
       E_PC     => E_PC,
       sclr_PC  => sclr_PC,
-      im_enb   => im_enb,
-      im_web   => im_web,
-      im_dinb  => im_dinb,
-      im_addrb => im_addrb,
+     -- im_enb   => im_enb,
+     -- im_web   => im_web,
+     -- im_dinb  => im_dinb,
+     -- im_addrb => im_addrb,
       IN_PORT  => IN_PORT,
+      DM_DO => DM_DO,
       --READ_STROBE  => READ_STROBE,
       --WRITE_STROBE => WRITE_STROBE,
       PORT_ID  => PORT_ID,
@@ -139,37 +142,41 @@ begin
     --======================
     -- Load instructions
     --======================
-    im_web <= '1';
-    im_enb <= '1';
+    --im_web <= '1';
+    --im_enb <= '1';
 
     --At address 0:
-    im_dinb <= "000000" & "00000" & "000000000000000000010";  -- LOAD s0, #2
-    wait for clock_period;
+   -- im_dinb <= "000000" & "00000" & "000000000000000000010";  -- LOAD s0, #2
+   -- wait for clock_period;
 
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "000000" & "00001" & "000000000000000000010";  -- LOAD s1, #2
-    wait for clock_period;
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb <= "000000" & "00001" & "000000000000000000010";  -- LOAD s1, #2
+   -- wait for clock_period;
 
-    -- s16's a counter w/ value 4
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "000000" & "10000" & "000000000000000000100";  -- LOAD s16, #4
-    wait for clock_period;
+   -- -- s16's a counter w/ value 4
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb <= "000000" & "10000" & "000000000000000000100";  -- LOAD s16, #4
+   -- wait for clock_period;
 
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb  <= "011001" & "00000" & "00001" & x"0000";  -- ADD s0, s1
-    wait for clock_period;
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb  <= "011001" & "00000" & "00001" & x"0000";  -- ADD s0, s1
+   -- wait for clock_period;
 
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb  <= "011100" & "10000" & "000000000000000000001";  -- SUBI s16, #1
-    wait for clock_period;
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb  <= "101111" & "00000" & "00011" & x"0000";  -- STORE s0, s3
+   -- wait for clock_period;
 
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb  <= "110011" & "001" & "1111110" & x"0000";  -- BR NZ, -2
-    wait for clock_period;
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb  <= "011100" & "10000" & "000000000000000000001";  -- SUBI s16, #1
+   -- wait for clock_period;
 
-    im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
-    im_dinb <= "000000" & "00100" & "000000000000000000010";  -- LOAD s4, #2
-    wait for clock_period;
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb  <= "110011" & "001" & "1111110" & x"0000";  -- BR NZ, -2
+   -- wait for clock_period;
+
+   -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
+   -- im_dinb <= "000000" & "00100" & "000000000000000000010";  -- LOAD s4, #2
+   -- wait for clock_period;
 
    -- im_addrb <= std_logic_vector(to_unsigned(to_integer(unsigned(im_addrb)) + 1, im_addrb'length));
    -- im_dinb  <= "110000" & x"100";      -- CALL $100
@@ -183,9 +190,9 @@ begin
     --======================
     -- Finish loading
     --======================
-    im_enb <= '0';
-    im_web <= '0';
-    E_PC   <= '1';
+   -- im_enb <= '0';
+   -- im_web <= '0';
+   -- E_PC   <= '1';
 
     wait;
   end process;
