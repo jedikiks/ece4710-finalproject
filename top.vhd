@@ -2,37 +2,60 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
-entity top_p2 is
+entity top is
   generic (
     -- MMCM
-    O_0         : integer := 2;
-    O_1         : integer := 2;
-    O_2         : integer := 4;
-    -- instload_ctrl
-    ADDR_WDTH   : integer := 6;
-    WORD_WDTH   : integer := 16;
-    -- Program counter
-    OFFSET_WDTH : integer := 6);
+    O_0          : integer := 2;
+    O_1          : integer := 2;
+    O_2          : integer := 4;
+    -- Instruction Memory
+    IM_DIN_BITS  : integer := 32;
+    IM_ADDR_BITS : integer := 16;
+    -- Data Memory
+    DI_WDTH      : integer := 32;
+    DO_WDTH      : integer := 32;
+    ADDR_WDTH    : integer := 6;
+    -- Stack
+    SP_WDTH      : integer := 5;
+    DAT_WDTH     : integer := 16;
+    -- Control
+    IR_BITS      : integer := 32;
+    -- Datapath
+    FS_BITS      : integer := 5;
+    DR_BITS      : integer := 5;
+    SR_BITS      : integer := 5;
+    MD_BITS      : integer := 2;
+    -- Program Counter
+    OFFSET_WDTH  : integer := 7);
   port (
-    clock, resetn     : in  std_logic;
-    -- instload_ctrl
-    start, step, L_in : in  std_logic;
-    -- Data memory
-    DM_DO             : out std_logic_vector (15 downto 0));
-end top_p2;
+    clock, resetn : in  std_logic;
+    E_PC, sclr_PC : in  std_logic;
+    DM_DO         : out std_logic_vector (15 downto 0));
+end top;
 
-architecture structural of top_p2 is
-  component top is
+architecture structural of top is
+  component microprocessor_32 is
     generic (
-      ADDR_WDTH   : integer;
-      WORD_WDTH   : integer;
-      OFFSET_WDTH : integer);
+      IM_DIN_BITS  : integer;
+      IM_ADDR_BITS : integer;
+      DI_WDTH      : integer;
+      DO_WDTH      : integer;
+      ADDR_WDTH    : integer;
+      SP_WDTH      : integer;
+      DAT_WDTH     : integer;
+      IR_BITS      : integer;
+      FS_BITS      : integer;
+      DR_BITS      : integer;
+      SR_BITS      : integer;
+      MD_BITS      : integer;
+      OFFSET_WDTH  : integer);
     port (
-      clock, resetn                  : in  std_logic;
-      start, step, L_in, L_ex, we_ex : in  std_logic;
-      D_ex                           : in  std_logic_vector (15 downto 0);
-      DM_DO                          : out std_logic_vector (15 downto 0));
-  end component top;
+      clock   : in  std_logic;
+      resetn  : in  std_logic;
+      E_PC    : in  std_logic;
+      sclr_PC : in  std_logic;
+      DM_DO   : out std_logic_vector (15 downto 0));
+  end component microprocessor_32;
 
   component mydebouncer is
     port (
@@ -60,8 +83,7 @@ architecture structural of top_p2 is
       locked                    : out std_logic);
   end component MMCM_wrapper;
 
-  signal debouncer_out_L_in, debouncer_out_start,
-    debouncer_out_step, pulse_det_out, clk_50mhz : std_logic;
+  signal debouncer_out_E_PC, pulse_det_out, clk_50mhz : std_logic;
 
 begin
   MMCM_wrapper_1 : MMCM_wrapper
@@ -78,44 +100,36 @@ begin
     port map (
       clock  => clk_50mhz,
       resetn => resetn,
-      x      => debouncer_out_step,
+      x      => debouncer_out_E_PC,
       z      => pulse_det_out);
 
-  mydebouncer_L_in : mydebouncer
+  mydebouncer_E_PC : mydebouncer
     port map (
       resetn => resetn,
       clock  => clk_50mhz,
-      w      => L_in,
-      w_db   => debouncer_out_L_in);
+      w      => E_PC,
+      w_db   => debouncer_out_E_PC);
 
-  mydebouncer_start : mydebouncer
-    port map (
-      resetn => resetn,
-      clock  => clk_50mhz,
-      w      => start,
-      w_db   => debouncer_out_start);
-
-  mydebouncer_step : mydebouncer
-    port map (
-      resetn => resetn,
-      clock  => clk_50mhz,
-      w      => step,
-      w_db   => debouncer_out_step);
-
-  top_1 : top
+  microprocessor_32_1 : microprocessor_32
     generic map (
-      ADDR_WDTH   => ADDR_WDTH,
-      WORD_WDTH   => WORD_WDTH,
-      OFFSET_WDTH => OFFSET_WDTH)
+      IM_DIN_BITS  => IM_DIN_BITS,
+      IM_ADDR_BITS => IM_ADDR_BITS,
+      DI_WDTH      => DI_WDTH,
+      DO_WDTH      => DO_WDTH,
+      ADDR_WDTH    => ADDR_WDTH,
+      SP_WDTH      => SP_WDTH,
+      DAT_WDTH     => DAT_WDTH,
+      IR_BITS      => IR_BITS,
+      FS_BITS      => FS_BITS,
+      DR_BITS      => DR_BITS,
+      SR_BITS      => SR_BITS,
+      MD_BITS      => MD_BITS,
+      OFFSET_WDTH  => OFFSET_WDTH)
     port map (
-      clock  => clk_50mhz,
-      resetn => resetn,
-      start  => debouncer_out_start,
-      step   => pulse_det_out,
-      L_in   => debouncer_out_L_in,
-      L_ex   => '0',
-      we_ex  => '0',
-      D_ex   => (others => '0'),
-      DM_DO  => DM_DO);
+      clock   => clock,
+      resetn  => resetn,
+      E_PC    => pulse_det_out,
+      sclr_PC => '0',
+      DM_DO   => DM_DO);
 
 end structural;

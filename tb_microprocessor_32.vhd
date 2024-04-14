@@ -44,7 +44,7 @@ architecture behavior of tb_microprocessor_32 is
       MD_BITS       : integer;
       OFFSET_WDTH   : integer);
     port (
-      clock, resetn, INT : in  std_logic;
+      clock, resetn : in  std_logic;
       E_PC, sclr_PC      : in  std_logic;
       DM_DO : out std_logic_vector (15 downto 0));
   end component microprocessor_32;
@@ -52,7 +52,6 @@ architecture behavior of tb_microprocessor_32 is
   --Inputs
   signal clock    : std_logic                                    := '0';
   signal resetn   : std_logic                                    := '0';
-  signal INT      : std_logic                                    := '0';
   signal E_PC     : std_logic                                    := '1';
   signal sclr_PC  : std_logic                                    := '0';
   --Outputs
@@ -82,7 +81,6 @@ begin
     port map (
       clock    => clock,
       resetn   => resetn,
-      INT      => INT,
       E_PC     => E_PC,
       sclr_PC  => sclr_PC,
       DM_DO => DM_DO);

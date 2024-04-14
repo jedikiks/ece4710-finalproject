@@ -27,7 +27,7 @@ entity microprocessor_32 is
 
   port (
     -- Input signals
-    clock, resetn, INT : in  std_logic;
+    clock, resetn : in  std_logic;
     -- PC signals
     E_PC, sclr_PC      : in  std_logic;
     -- Output signals
