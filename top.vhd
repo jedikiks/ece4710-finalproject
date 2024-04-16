@@ -30,7 +30,8 @@ entity top is
   port (
     clock, resetn : in  std_logic;
     E_PC, sclr_PC : in  std_logic;
-    DM_DO         : out std_logic_vector (15 downto 0));
+    addr_sel      : in  std_logic_vector (1 downto 0);
+    DM_DO_B       : out std_logic_vector (15 downto 0));
 end top;
 
 architecture structural of top is
@@ -50,11 +51,10 @@ architecture structural of top is
       MD_BITS      : integer;
       OFFSET_WDTH  : integer);
     port (
-      clock   : in  std_logic;
-      resetn  : in  std_logic;
-      E_PC    : in  std_logic;
-      sclr_PC : in  std_logic;
-      DM_DO   : out std_logic_vector (15 downto 0));
+      clock, resetn : in  std_logic;
+      DM_AO_B       : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
+      E_PC, sclr_PC : in  std_logic;
+      DM_DO_B       : out std_logic_vector (DO_WDTH - 1 downto 0));
   end component microprocessor_32;
 
   component mydebouncer is
@@ -84,8 +84,18 @@ architecture structural of top is
   end component MMCM_wrapper;
 
   signal debouncer_out_E_PC, pulse_det_out, clk_50mhz : std_logic;
+  signal DM_DO_B_t                                    : std_logic_vector(31 downto 0);
+  signal DM_AO_B                                      : std_logic_vector(5 downto 0);
 
 begin
+  DM_DO_B <= DM_DO_B_t(15 downto 0);
+
+  with addr_sel select
+    DM_AO_B <= "111111" when "00",
+    "111110"            when "01",
+    "111101"            when "10",
+    "111100"            when others;
+
   MMCM_wrapper_1 : MMCM_wrapper
     generic map (
       O_0 => O_0,
@@ -110,7 +120,7 @@ begin
       w      => E_PC,
       w_db   => debouncer_out_E_PC);
 
-  microprocessor_32_1 : microprocessor_32
+  microprocessor_32_2 : microprocessor_32
     generic map (
       IM_DIN_BITS  => IM_DIN_BITS,
       IM_ADDR_BITS => IM_ADDR_BITS,
@@ -128,8 +138,9 @@ begin
     port map (
       clock   => clk_50mhz,
       resetn  => resetn,
+      DM_AO_B => DM_AO_B,
       E_PC    => '1',
       sclr_PC => '0',
-      DM_DO   => DM_DO);
+      DM_DO_B => DM_DO_B_t);
 
 end structural;

@@ -32,8 +32,7 @@ entity microprocessor_32 is
     -- PC signals
     E_PC, sclr_PC : in  std_logic;
     -- Output signals
-    DM_DO_B       : out std_logic_vector (DO_WDTH - 1 downto 0);
-    DM_DO         : out std_logic_vector (15 downto 0));
+    DM_DO_B       : out std_logic_vector (DO_WDTH - 1 downto 0));
 end microprocessor_32;
 
 architecture structural of microprocessor_32 is
@@ -211,7 +210,7 @@ architecture structural of microprocessor_32 is
 -- Data Memory
   signal DM_AO   : std_logic_vector (ADDR_WDTH - 1 downto 0);
   signal DM_DI   : std_logic_vector (DI_WDTH - 1 downto 0);
-  signal DM_DO_t : std_logic_vector (DO_WDTH - 1 downto 0);
+  signal DM_DO   : std_logic_vector (DO_WDTH - 1 downto 0);
 
 -- Instruction Memory
 
@@ -224,7 +223,6 @@ begin
   --PC_t <= "000000" & PC;
   INTP   <= '0';
   offset <= IR(22 downto 16);
-  DM_DO  <= DM_DO_t(15 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
@@ -238,7 +236,7 @@ begin
       resetn  => resetn,
       DR      => DR,
       CI      => CI,
-      DI      => DM_DO_t,
+      DI      => DM_DO,
       MD      => MD,
       fs      => fs,
       MB      => MB,
@@ -271,7 +269,7 @@ begin
       wea(0)   => DM_WE,
       addra => DM_AO,
       dina  => DM_DI,
-      douta => DM_DO_t,
+      douta => DM_DO,
       clkb  => clock,
       web(0)   => '0',
       addrb => DM_AO_B,
