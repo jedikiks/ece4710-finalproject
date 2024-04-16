@@ -6,41 +6,43 @@ use ieee.math_real.ceil;
 entity microprocessor_32 is
   generic (
     -- Instruction Memory
-    IM_DIN_BITS   : integer := 32;
-    IM_ADDR_BITS  : integer := 16;
+    IM_DIN_BITS  : integer := 32;
+    IM_ADDR_BITS : integer := 16;
     -- Data Memory
-    DI_WDTH       : integer := 32;
-    DO_WDTH       : integer := 32;
-    ADDR_WDTH     : integer := 6;
+    DI_WDTH      : integer := 32;
+    DO_WDTH      : integer := 32;
+    ADDR_WDTH    : integer := 6;
     -- Stack
-    SP_WDTH       : integer := 5;
-    DAT_WDTH      : integer := 16;
+    SP_WDTH      : integer := 5;
+    DAT_WDTH     : integer := 16;
     -- Control
-    IR_BITS       : integer := 32;
+    IR_BITS      : integer := 32;
     -- Datapath
-    FS_BITS       : integer := 5;
-    DR_BITS       : integer := 5;
-    SR_BITS       : integer := 5;
-    MD_BITS       : integer := 2;
+    FS_BITS      : integer := 5;
+    DR_BITS      : integer := 5;
+    SR_BITS      : integer := 5;
+    MD_BITS      : integer := 2;
     -- Program Counter
-    OFFSET_WDTH   : integer := 7);
+    OFFSET_WDTH  : integer := 7);
 
   port (
     -- Input signals
     clock, resetn : in  std_logic;
+    DM_AO_B       : in  std_logic_vector (ADDR_WDTH - 1 downto 0);
     -- PC signals
-    E_PC, sclr_PC      : in  std_logic;
+    E_PC, sclr_PC : in  std_logic;
     -- Output signals
-    DM_DO : out std_logic_vector (15 downto 0));
+    DM_DO_B       : out std_logic_vector (DO_WDTH - 1 downto 0);
+    DM_DO         : out std_logic_vector (15 downto 0));
 end microprocessor_32;
 
 architecture structural of microprocessor_32 is
   component Datapath is
     generic (
-      FS_BITS       : integer;
-      DR_BITS       : integer;
-      SR_BITS       : integer;
-      MD_BITS       : integer);
+      FS_BITS : integer;
+      DR_BITS : integer;
+      SR_BITS : integer;
+      MD_BITS : integer);
     port (
       clock, resetn : in  std_logic;
       DR            : in  std_logic_vector (DR_BITS - 1 downto 0);
@@ -154,6 +156,21 @@ architecture structural of microprocessor_32 is
       PC            : out std_logic_vector (IM_ADDR_BITS - 1 downto 0));
   end component program_counter;
 
+  component data_mem is
+    port (
+      clka  : in  std_logic;
+      wea   : in  std_logic_vector(0 downto 0);
+      addra : in  std_logic_vector(5 downto 0);
+      dina  : in  std_logic_vector(31 downto 0);
+      douta : out std_logic_vector(31 downto 0);
+      clkb  : in  std_logic;
+      web   : in  std_logic_vector(0 downto 0);
+      addrb : in  std_logic_vector(5 downto 0);
+      dinb  : in  std_logic_vector(31 downto 0);
+      doutb : out std_logic_vector(31 downto 0)
+      );
+  end component data_mem;
+
   component ram_emul is
     generic (
       DI_WDTH   : integer;
@@ -192,8 +209,8 @@ architecture structural of microprocessor_32 is
   signal SP : std_logic_vector (SP_WDTH - 1 downto 0);
 
 -- Data Memory
-  signal DM_AO : std_logic_vector (ADDR_WDTH - 1 downto 0);
-  signal DM_DI : std_logic_vector (DI_WDTH - 1 downto 0);
+  signal DM_AO   : std_logic_vector (ADDR_WDTH - 1 downto 0);
+  signal DM_DI   : std_logic_vector (DI_WDTH - 1 downto 0);
   signal DM_DO_t : std_logic_vector (DO_WDTH - 1 downto 0);
 
 -- Instruction Memory
@@ -207,61 +224,74 @@ begin
   --PC_t <= "000000" & PC;
   INTP   <= '0';
   offset <= IR(22 downto 16);
-  DM_DO <= DM_DO_t(15 downto 0);
+  DM_DO  <= DM_DO_t(15 downto 0);
 
   -- Datapath
   Datapath_1 : Datapath
     generic map (
-      FS_BITS       => FS_BITS,
-      DR_BITS       => DR_BITS,
-      SR_BITS       => SR_BITS,
-      MD_BITS       => MD_BITS)
-    port map (
-      clock    => clock,
-      resetn   => resetn,
-      DR       => DR,
-      CI       => CI,
-      DI       => DM_DO_t,
-      MD       => MD,
-      fs       => fs,
-      MB       => MB,
-      RW       => RW,
-      MA       => MA,
-      MA_sclr  => MA_sclr,
-      SIE      => SIE,
-      LIE      => LIE,
-      INTP     => INTP,
-      RI       => RI,
-      RS       => RS,
-      WS       => WS,
-      SR       => SR,
-      Z_en     => Z_en,
-      C_en     => C_en,
-      V_en     => V_en,
-      N_en     => N_en,
-      Z        => Z,
-      C        => C,
-      V        => V,
-      N        => N,
-      IE       => IE,
-      AO       => DM_AO,
-      DO       => DM_DI);
-
-  -- Data memory
-  ram_emul_1 : ram_emul
-    generic map (
-      DI_WDTH   => DI_WDTH,
-      DO_WDTH   => DO_WDTH,
-      ADDR_WDTH => ADDR_WDTH,
-      OMUX_NOTZ => false)
+      FS_BITS => FS_BITS,
+      DR_BITS => DR_BITS,
+      SR_BITS => SR_BITS,
+      MD_BITS => MD_BITS)
     port map (
       clock   => clock,
       resetn  => resetn,
-      we      => DM_WE,
-      en      => '1',
-      di      => DM_DI,
-      address => DM_AO,
-      do      => DM_DO_t);
+      DR      => DR,
+      CI      => CI,
+      DI      => DM_DO_t,
+      MD      => MD,
+      fs      => fs,
+      MB      => MB,
+      RW      => RW,
+      MA      => MA,
+      MA_sclr => MA_sclr,
+      SIE     => SIE,
+      LIE     => LIE,
+      INTP    => INTP,
+      RI      => RI,
+      RS      => RS,
+      WS      => WS,
+      SR      => SR,
+      Z_en    => Z_en,
+      C_en    => C_en,
+      V_en    => V_en,
+      N_en    => N_en,
+      Z       => Z,
+      C       => C,
+      V       => V,
+      N       => N,
+      IE      => IE,
+      AO      => DM_AO,
+      DO      => DM_DI);
+
+  -- Data memory
+  data_mem_1 : data_mem
+    port map (
+      clka  => clock,
+      wea(0)   => DM_WE,
+      addra => DM_AO,
+      dina  => DM_DI,
+      douta => DM_DO_t,
+      clkb  => clock,
+      web(0)   => '0',
+      addrb => DM_AO_B,
+      dinb  => (others => '0'),
+      doutb => DM_DO_B);
+
+--  ram_emul_1 : ram_emul
+--    generic map (
+--      DI_WDTH   => DI_WDTH,
+--      DO_WDTH   => DO_WDTH,
+--      ADDR_WDTH => ADDR_WDTH,
+--      OMUX_NOTZ => false)
+--    port map (
+--      clock   => clock,
+--      resetn  => resetn,
+--      we      => DM_WE,
+--      en      => '1',
+--      di      => DM_DI,
+--      address => DM_AO,
+--      do      => DM_DO_t);
 
   -- Instruction memory
   instr_mem_1 : instr_mem

@@ -213,7 +213,6 @@ begin
             -- Datapath
             SR  <= IR(20 downto 16);
             DR  <= IR(25 downto 21);
-            RW  <= '1';
             MD  <= "10";
             -- PC
             JS  <= "011";
@@ -339,7 +338,6 @@ begin
             MB  <= '1';
             DR  <= IR(25 downto 21);
             MD  <= "10";
-            RW  <= '1';
             -- PC
             JS  <= "011";
             EPC <= '1';
@@ -1067,6 +1065,7 @@ begin
           when "000111" =>              -- FETCH sX, (sY)
             -- Datapath
             DR <= IR(25 downto 21);
+            RW  <= '1';
             MD <= "10";
 
           when "101111" =>              -- STORE sX, (sY)
@@ -1156,6 +1155,7 @@ begin
             MB <= '1';
             DR <= IR(25 downto 21);
             MD <= "10";
+            RW  <= '1';
 
           when "101110" =>              -- STORE sX, ss
             -- Datapath
