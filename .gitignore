@@ -27,4 +27,8 @@ vivado_pid367455.str
 xsim.dir/
 xvhdl.log
 xvhdl.pb
+uart_output/project_1/
+uart_output/tb_uart_output.vhd
+uart_output/uart_tx.xdc
+
 
