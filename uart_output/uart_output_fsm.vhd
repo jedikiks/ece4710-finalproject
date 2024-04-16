@@ -10,7 +10,7 @@ end uart_output_fsm;
 
 architecture Behavioral of uart_output_fsm is
 
-    type state is (S1, S2, S3);
+    type state is (S1, S2, S3, S4, S5);
     signal y : state;
 
 begin
@@ -34,12 +34,20 @@ begin
                 when S3 =>
                     if done = '1' then
                         if zG = '1' then
-                            y <= S1;
+                            y <= S4;
                         else
                             y <= S2;
                         end if;
                     else
                         y <= S3;
+                    end if;
+
+                when S4 =>
+                when S5 =>
+                    if done = '1' then
+                        y <= S1;
+                    else
+                        y <= S5;
                     end if;
 
             end case;
@@ -53,23 +61,29 @@ begin
         case y is
             when S1 =>
                 sclrG <= '1';
-                EG <= '1';
+                EG    <= '1';
                 if rdy = '1' then
                     s_l   <= '1';
                     E_out <= '1';
                 end if;
 
             when S2 =>
-                    E_out <= '1';
-                    E     <= '1';
+                E_out <= '1';
+                E     <= '1';
 
             when S3 =>
                 E <= '1';
                 if done = '1' then
                     if zG = '0' then
-                        EG    <= '1';
+                        EG <= '1';
                     end if;
                 end if;
+
+            when S4 =>
+                E <= '1';
+
+            when S5 =>
+                E <= '1';
         end case;
     end process;
 end Behavioral;

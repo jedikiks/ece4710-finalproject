@@ -27,11 +27,9 @@ entity top is
     MD_BITS      : integer := 2;
     -- Program Counter
     OFFSET_WDTH  : integer := 7);
-  port (
-    clock, resetn : in  std_logic;
-    E_PC, sclr_PC : in  std_logic;
-    addr_sel      : in  std_logic_vector (1 downto 0);
-    DM_DO_B       : out std_logic_vector (15 downto 0));
+  port (clock, resetn, rdy : in  std_logic;
+        addr_sel           : in  std_logic_vector (1 downto 0);
+        TXD                : out std_logic);
 end top;
 
 architecture structural of top is
@@ -56,6 +54,14 @@ architecture structural of top is
       E_PC, sclr_PC : in  std_logic;
       DM_DO_B       : out std_logic_vector (DO_WDTH - 1 downto 0));
   end component microprocessor_32;
+
+  component uart_output is
+    port (
+      resetn, clock : in  std_logic;
+      rdy           : in  std_logic;
+      din           : in  std_logic_vector (31 downto 0);
+      TXD           : out std_logic);
+  end component uart_output;
 
   component mydebouncer is
     port (
@@ -84,11 +90,10 @@ architecture structural of top is
   end component MMCM_wrapper;
 
   signal debouncer_out_E_PC, pulse_det_out, clk_50mhz : std_logic;
-  signal DM_DO_B_t                                    : std_logic_vector(31 downto 0);
+  signal DM_DO_B                                      : std_logic_vector(31 downto 0);
   signal DM_AO_B                                      : std_logic_vector(5 downto 0);
 
 begin
-  DM_DO_B <= DM_DO_B_t(15 downto 0);
 
   with addr_sel select
     DM_AO_B <= "111111" when "00",
@@ -120,6 +125,14 @@ begin
       w      => E_PC,
       w_db   => debouncer_out_E_PC);
 
+  uart_output_1 : uart_output
+    port map (
+      resetn => resetn,
+      clock  => clock,
+      rdy    => rdy,
+      din    => DM_DO_B,
+      TXD    => TXD);
+
   microprocessor_32_2 : microprocessor_32
     generic map (
       IM_DIN_BITS  => IM_DIN_BITS,
@@ -141,6 +154,6 @@ begin
       DM_AO_B => DM_AO_B,
       E_PC    => '1',
       sclr_PC => '0',
-      DM_DO_B => DM_DO_B_t);
+      DM_DO_B => DM_DO_B);
 
 end structural;

@@ -276,21 +276,6 @@ begin
       dinb  => (others => '0'),
       doutb => DM_DO_B);
 
---  ram_emul_1 : ram_emul
---    generic map (
---      DI_WDTH   => DI_WDTH,
---      DO_WDTH   => DO_WDTH,
---      ADDR_WDTH => ADDR_WDTH,
---      OMUX_NOTZ => false)
---    port map (
---      clock   => clock,
---      resetn  => resetn,
---      we      => DM_WE,
---      en      => '1',
---      di      => DM_DI,
---      address => DM_AO,
---      do      => DM_DO_t);
-
   -- Instruction memory
   instr_mem_1 : instr_mem
     port map (

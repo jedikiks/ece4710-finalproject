@@ -6,7 +6,7 @@ use ieee.math_real.ceil;
 entity uart_output is
     port (resetn, clock : in  std_logic;
           rdy           : in  std_logic;
-          --din           : in  std_logic_vector (31 downto 0);
+          din           : in  std_logic_vector (31 downto 0);
           TXD           : out std_logic);
 end uart_output;
 
@@ -52,14 +52,17 @@ architecture structural of uart_output is
               shiftout      : out std_logic);
     end component;
 
-    signal dout, done, E_out, s_l, EG, sclrG, zG, E : std_logic;
-    signal lut_out             : std_logic_vector (7 downto 0);
-    signal din             : std_logic_vector (31 downto 0);
+    signal dout, done, E_out, s_l, EG, sclrG, zG, E, sel : std_logic;
+    signal lut_out, data_rx                              : std_logic_vector (7 downto 0);
 
 begin
     -- Bit comparator
     --cmp_out <= '1' when dout = '1' else '0';
-    din <= "10111000000000000000000000111111";
+
+    with sel select
+        data_rx <= lut_out when '0',
+        x"0A"            when others;
+
 
     -- Bit to ascii LUT
     with dout select
@@ -68,7 +71,8 @@ begin
 
 -- Shift Registers
     sa : my_pashiftreg generic map (N => 32, DIR => "RIGHT")
-        port map (clock => clock, resetn => resetn, din => '0', E => E_out, s_l => s_l, D => din, shiftout => dout);
+        port map (clock => clock, resetn => resetn, din => '0', E => E_out, s_l => s_l,
+                  D     => din, shiftout => dout);
 
 -- Counter: 32
     my_genpulse_sclr_1 : my_genpulse_sclr
@@ -86,7 +90,7 @@ begin
             resetn => resetn,
             clock  => clock,
             E      => E,
-            SW     => lut_out,
+            SW     => data_rx,
             done   => done,
             TXD    => TXD);
 
