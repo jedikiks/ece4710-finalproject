@@ -63,20 +63,6 @@ architecture structural of top is
       TXD           : out std_logic);
   end component uart_output;
 
-  component mydebouncer is
-    port (
-      resetn, clock : in  std_logic;
-      w             : in  std_logic;
-      w_db          : out std_logic);
-  end component mydebouncer;
-
-  component mypulse_det is
-    port (
-      clock, resetn : in  std_logic;
-      x             : in  std_logic;
-      z             : out std_logic);
-  end component mypulse_det;
-
   component MMCM_wrapper is
     generic (
       constant O_0 : integer;
@@ -89,9 +75,9 @@ architecture structural of top is
       locked                    : out std_logic);
   end component MMCM_wrapper;
 
-  signal debouncer_out_E_PC, pulse_det_out, clk_50mhz : std_logic;
-  signal DM_DO_B                                      : std_logic_vector(31 downto 0);
-  signal DM_AO_B                                      : std_logic_vector(5 downto 0);
+  signal clk_50mhz, E_PC : std_logic;
+  signal DM_DO_B         : std_logic_vector(31 downto 0);
+  signal DM_AO_B         : std_logic_vector(5 downto 0);
 
 begin
 
@@ -110,20 +96,6 @@ begin
       clock   => clock,
       resetn  => resetn,
       clkout0 => clk_50mhz);
-
-  mypulse_det_1 : mypulse_det
-    port map (
-      clock  => clk_50mhz,
-      resetn => resetn,
-      x      => debouncer_out_E_PC,
-      z      => pulse_det_out);
-
-  mydebouncer_E_PC : mydebouncer
-    port map (
-      resetn => resetn,
-      clock  => clk_50mhz,
-      w      => E_PC,
-      w_db   => debouncer_out_E_PC);
 
   uart_output_1 : uart_output
     port map (

@@ -22,6 +22,7 @@ architecture structural of uart_output is
             E_out  : out std_logic;
             EG     : out std_logic;
             sclrG  : out std_logic;
+            sel    : out std_logic;
             E      : out std_logic);
     end component uart_output_fsm;
 
@@ -52,16 +53,19 @@ architecture structural of uart_output is
               shiftout      : out std_logic);
     end component;
 
-    signal dout, done, E_out, s_l, EG, sclrG, zG, E, sel : std_logic;
-    signal lut_out, data_rx                              : std_logic_vector (7 downto 0);
+    signal dout, done, E_out, s_l, EG,
+        sclrG, zG, E, sel : std_logic;
+    signal lut_out, data_rx : std_logic_vector (7 downto 0);
+    --signal din              : std_logic_vector (31 downto 0);
 
 begin
     -- Bit comparator
     --cmp_out <= '1' when dout = '1' else '0';
+    --din <= "10111000011000000000000000111100";
 
     with sel select
         data_rx <= lut_out when '0',
-        x"0A"            when others;
+        x"0A"              when others;
 
 
     -- Bit to ascii LUT
@@ -105,5 +109,6 @@ begin
             E_out  => E_out,
             EG     => EG,
             sclrG  => sclrG,
+            sel    => sel,
             E      => E);
 end structural;

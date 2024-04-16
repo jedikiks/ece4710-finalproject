@@ -5,7 +5,7 @@ use ieee.math_real.ceil;
 
 entity uart_output_fsm is
     port (resetn, clock, zG, done, rdy : in  std_logic;
-          s_l, E_out, EG, sclrG, E     : out std_logic);
+          s_l, E_out, EG, sclrG, E, sel     : out std_logic);
 end uart_output_fsm;
 
 architecture Behavioral of uart_output_fsm is
@@ -43,6 +43,7 @@ begin
                     end if;
 
                 when S4 =>
+                    y <= S5;
                 when S5 =>
                     if done = '1' then
                         y <= S1;
@@ -57,7 +58,7 @@ begin
     Outputs : process (y, zG, rdy, done)
     begin
         -- Initialization of FSM outputs:
-        s_l <= '0'; E_out <= '0'; EG <= '0'; sclrG <= '0'; E <= '0';
+        s_l <= '0'; E_out <= '0'; EG <= '0'; sclrG <= '0'; E <= '0'; sel <= '0';
         case y is
             when S1 =>
                 sclrG <= '1';
@@ -81,6 +82,8 @@ begin
 
             when S4 =>
                 E <= '1';
+                E_out <= '1';
+                sel <= '1';
 
             when S5 =>
                 E <= '1';
